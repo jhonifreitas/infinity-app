@@ -27,6 +27,7 @@ import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { environment } from 'src/environments/environment';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 registerLocaleData(localePt);
 
@@ -42,6 +43,12 @@ registerLocaleData(localePt);
     AngularFireFunctionsModule,
     AngularFireMessagingModule,
     AngularFireModule.initializeApp(environment.firebase),
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the app is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
   ],
   providers: [
     FCM,

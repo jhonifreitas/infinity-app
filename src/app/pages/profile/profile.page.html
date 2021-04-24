@@ -7,15 +7,15 @@
 <ion-content class="ion-padding">
 
   <ion-avatar>
-    <ion-img *ngIf="photo" [src]="photo"></ion-img>
-    <ion-icon *ngIf="!photo" color="primary" src="assets/icon/icon-no-image.svg"></ion-icon>
+    <ion-img *ngIf="data?.image" [src]="data.image"></ion-img>
+    <ion-icon *ngIf="!data?.image" color="primary" src="assets/icon/icon-no-image.svg"></ion-icon>
     <ion-fab-button size="small" *ngIf="isCordova" (click)="takePhoto()">
       <ion-icon size="small" name="pencil"></ion-icon>
     </ion-fab-button>
     <ion-fab-button size="small" *ngIf="!isCordova" (click)="inputUpload.click()">
       <ion-icon size="small" name="pencil"></ion-icon>
     </ion-fab-button>
-    <input type="file" #inputUpload [hidden]="true" accept="image/png, image/jpeg" (change)="uploadPWA($event.target)">
+    <input type="file" #inputUpload [hidden]="true" accept="image/png, image/jpeg" (change)="uploadPWA($event.srcElement)">
   </ion-avatar>
 
   <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
