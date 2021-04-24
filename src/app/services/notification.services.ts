@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { NavController, Platform } from '@ionic/angular';
 import { AngularFireMessaging } from '@angular/fire/messaging';
 
-import { FCM } from 'cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
+import { FCM } from '@ionic-native/fcm/ngx';
 
 import { UtilService } from './util.service';
 import { environment } from 'src/environments/environment';
@@ -39,7 +39,7 @@ export class NotificationsService {
   }
 
   requestPermission() {
-    if (this.platform.is('cordova')) return this.fcm.requestPushPermission();
+    if (this.platform.is('cordova')) return this.fcm.requestPushPermissionIOS();
     return this.afMessaging.requestPermission.toPromise();
   }
 

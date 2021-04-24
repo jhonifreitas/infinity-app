@@ -6,13 +6,13 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { CurrencyPipe, DatePipe, registerLocaleData } from '@angular/common';
 
 // NATIVE
+import { FCM } from '@ionic-native/fcm/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
-import { FCM } from 'cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
 
 // FIREBASE
 import { AngularFireModule } from '@angular/fire';
