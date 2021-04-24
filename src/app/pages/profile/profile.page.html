@@ -15,7 +15,7 @@
     <ion-fab-button size="small" *ngIf="!isCordova" (click)="inputUpload.click()">
       <ion-icon size="small" name="pencil"></ion-icon>
     </ion-fab-button>
-    <input type="file" #inputUpload [hidden]="true" accept="image/png, image/jpeg" (change)="uploadPWA($event.srcElement)">
+    <input type="file" #inputUpload [hidden]="true" accept="image/png, image/jpeg" (change)="uploadPWA($event.target)">
   </ion-avatar>
 
   <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
