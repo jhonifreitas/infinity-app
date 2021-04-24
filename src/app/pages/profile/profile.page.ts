@@ -119,9 +119,9 @@ export class ProfilePage implements OnInit {
     }).catch(_ => {});
   }
 
-  async uploadPWA(element: EventTarget) {
+  async uploadPWA(event: Event) {
     const loader = await this._util.loading('Carregando imagem...');
-    const file: Blob = element['files'][0];
+    const file: Blob = (event.target as HTMLInputElement).files[0];
     const reader = new FileReader();
 
     reader.addEventListener('load', async (event: any) => {
