@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Assessment</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list *ngIf="items?.length">
+    <ion-item button *ngFor="let item of items" [routerLink]="item.id">
+      <ion-label>{{ item.name }}</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <div id="list-empty" *ngIf="!items?.length">
+    <div class="ion-text-center">
+      <ion-icon color="primary" name="sad"></ion-icon>
+      <h4>Nenhum item encontrado!</h4>
+    </div>
+  </div>
+</ion-content>

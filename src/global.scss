@@ -24,3 +24,29 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+ion-button {text-transform: none;}
+ion-list {background: transparent !important;}
+ion-alert, ion-picker, ion-modal, ion-loading, ion-menu {backdrop-filter: blur(7px);}
+
+#vertical-align {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+#list-empty {
+  display: flex;
+  align-items: center;
+  
+  & > div {
+    width: 100%;
+    
+    h4 {color: var(--ion-color-step-500);}
+    ion-icon {font-size: 5rem;}
+  }
+}
+
+@media (max-width: 991px) {
+  #list-empty {min-height: 100%;}
+}

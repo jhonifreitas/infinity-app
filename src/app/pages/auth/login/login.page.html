@@ -1,0 +1,58 @@
+<ion-header class="ion-text-center">
+  <img src="assets/icon/favicon.png" alt="">
+</ion-header>
+
+<ion-content>
+  <div id="vertical-align">
+
+    <div class="container">
+      <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+
+        <h5 class="ion-text-center ion-text-uppercase">
+          Seja Bem-vindo<br>
+          A Infinity NeuroBusiness School
+        </h5>
+
+        <div id="social" class="ion-margin-top">
+          <ion-button color="light" id="facebook" expand="block" (click)="authSocial('facebook')">
+            Continuar com Facebook
+          </ion-button>
+          <ion-button color="light" id="google" expand="block" (click)="authSocial('google')">
+            Continuar com Google
+          </ion-button>
+          <ion-button color="light" id="apple" expand="block" *ngIf="isIOS" (click)="authSocial('apple')">
+            Continuar com Apple
+          </ion-button>
+          <ion-button color="light" id="email" expand="block" (click)="showAuth = !showAuth">
+            Entrar com E-mail
+          </ion-button>
+        </div>
+
+        <div *ngIf="showAuth" class="ion-margin-top">
+          <ion-item>
+            <ion-label position="floating">E-mail</ion-label>
+            <ion-input type="email" formControlName="email"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Senha</ion-label>
+            <ion-input [type]="togglePass ? 'text' : 'password'" formControlName="password"></ion-input>
+            <ion-icon slot="end" class="ion-align-self-end" [name]="togglePass ? 'eye-off' : 'eye'" (click)="togglePass = !togglePass"></ion-icon>
+          </ion-item>
+        </div>
+
+        <div class="ion-text-center ion-margin-top">
+          <ion-button type="submit" expand="block" color="primary" *ngIf="showAuth">Entrar</ion-button>
+          <p>Novo no Infinity? <ion-router-link routerLink="/auth/registre-se">Criar conta</ion-router-link></p>
+        </div>
+      </form>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer class="ion-text-center">
+  <p class="ion-no-margin">
+    Ao me inscrever para criar uma conta, eu aceito as
+    políticas da Infinity de Termos de Serviço, Políticas
+    de Privacidade, Políticas de Direitos Autorais e Código de Conduta
+  </p>
+</ion-footer>
