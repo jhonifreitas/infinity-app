@@ -28,6 +28,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { environment } from 'src/environments/environment';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { SubscriptionPageModule } from './pages/subscription/subscription.module';
 
 registerLocaleData(localePt);
 
@@ -38,6 +39,7 @@ registerLocaleData(localePt);
     AppRoutingModule,
     IonicModule.forRoot(),
     AngularFireAuthModule,
+    SubscriptionPageModule,
     AngularFireStorageModule,
     AngularFireDatabaseModule,
     AngularFireFunctionsModule,

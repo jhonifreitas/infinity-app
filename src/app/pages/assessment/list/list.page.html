@@ -6,7 +6,7 @@
 
 <ion-content>
   <ion-list *ngIf="items?.length">
-    <ion-item button *ngFor="let item of items" [routerLink]="item.id">
+    <ion-item button *ngFor="let item of items" routerLink="/assessment/{{ item.id }}">
       <ion-label>{{ item.name }}</ion-label>
     </ion-item>
   </ion-list>

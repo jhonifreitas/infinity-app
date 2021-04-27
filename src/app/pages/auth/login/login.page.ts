@@ -1,6 +1,5 @@
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
 import { NavController, Platform } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -29,7 +28,6 @@ export class LoginPage implements OnInit {
     private _util: UtilService,
     private platform: Platform,
     private navCtrl: NavController,
-    private afAuth: AngularFireAuth,
     private _student: StudentService,
     private _storage: StorageService,
     private formBuilder: FormBuilder,
@@ -44,7 +42,7 @@ export class LoginPage implements OnInit {
 
   async ngOnInit() {
     this.isIOS = this.platform.is('ios');
-    await this.afAuth.getRedirectResult().then(async credential => {
+    await this._auth.getRedirectResult().then(async credential => {
       if (credential.user) {
         const loader = await this._util.loading('Entrando...');
         const token = await this._notification.getToken;
@@ -60,8 +58,7 @@ export class LoginPage implements OnInit {
         if (credential.credential.signInMethod.indexOf('apple') > -1) data.authType = 'apple';
         else if (credential.credential.signInMethod.indexOf('facebook') > -1) data.authType = 'facebook';
 
-        if (await this._student.getById(uid)) await this._student.update(uid, data).catch(err => Promise.reject(err));
-        else await this._student.add(data).catch(err => Promise.reject(err));
+        await this._student.set(uid, data);
 
         await this._student.getById(uid).then(student => {
           if (student && !student.deletedAt) {
@@ -90,16 +87,16 @@ export class LoginPage implements OnInit {
       const value = this.formGroup.value;
       const loader = await this._util.loading('Entrando...');
       await this._auth.signInEmail(value.email, value.password).then(async uid => {
-        await this.updateToken();
+        await this.updateToken(uid);
         this.goToNext();
       }).catch(err => this._util.message(err));
       loader.dismiss();
     } else this._util.message('Preencha os dados corretamente antes de prosseguir!');
   }
 
-  async updateToken() {
+  async updateToken(id: string) {
     const token = await this._notification.getToken;
-    await this._student.update(this._storage.getUser.id, {token});
+    await this._student.update(id, {token});
   }
 
   goToNext() {

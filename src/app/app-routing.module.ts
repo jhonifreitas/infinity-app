@@ -2,13 +2,20 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 import { AuthGuard } from './guards/auth.guard';
+import { SubscriptionGuard } from './guards/subscription.guard';
 
 const routes: Routes = [
-  { path: '', canActivate: [AuthGuard], loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule) },
+  { path: '', redirectTo: '/tabs/assessment', pathMatch: 'full' },
+  
+  { path: 'tabs', canActivate: [AuthGuard], loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule) },
   { path: 'auth', children: [
     { path: 'entrar', loadChildren: () => import('./pages/auth/login/login.module').then(m => m.LoginPageModule) },
     { path: 'registre-se', loadChildren: () => import('./pages/auth/register/register.module').then(m => m.RegisterPageModule) }
-  ]}
+  ]},
+
+  { path: '', canActivate: [AuthGuard], children: [
+    { path: 'assessment/:id', canActivate: [SubscriptionGuard], loadChildren: () => import('./pages/assessment/form/form.module').then(m => m.AssessmentFormPageModule) },
+  ]},
 ];
 @NgModule({
   imports: [
