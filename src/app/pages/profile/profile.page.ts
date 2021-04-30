@@ -10,6 +10,7 @@ import { Student } from 'src/app/models/student';
 
 import { UtilService } from 'src/app/services/util.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { AuthService } from 'src/app/services/firebase/auth.service';
 import { StudentService } from 'src/app/services/firebase/student.service';
 
 @Component({
@@ -36,6 +37,7 @@ export class ProfilePage implements OnInit {
     private webview: WebView,
     private platform: Platform,
     private _util: UtilService,
+    private _auth: AuthService,
     private navCtrl: NavController,
     private _student: StudentService,
     private _storage: StorageService,
@@ -145,6 +147,10 @@ export class ProfilePage implements OnInit {
 
       loader.dismiss();
     } else this._util.message('Preencha os dados corretamente antes de prosseguir!');
+  }
+
+  logout() {
+    this._auth.signOut();
   }
 
   goToNext() {

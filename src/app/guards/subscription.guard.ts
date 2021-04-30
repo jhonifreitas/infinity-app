@@ -23,14 +23,32 @@ export class SubscriptionGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean> | Promise<boolean> | boolean {
     return new Promise(async resolve => {
       const loader = await this._util.loading('Verificando acesso...');
-      const param = route.data.assessmentId;
+      const id = route.paramMap.get('id');
+      const props: {
+        mbaId?: string;
+        courseId?: string;
+        assessmentId?: string;
+      } = {};
+      
+      let whereColumn: string = 'assessment.id';
+      if (route.data.assessment) props.assessmentId = id;
+      else if (route.data.mba) {
+        props.mbaId = id;
+        whereColumn = 'mba.id';
+      } else if (route.data.course) {
+        props.courseId = id;
+        whereColumn = 'course.id';
+      }
 
-      await this._subscription.getByStudentId(this._storage.getUser.id).then(_ => {
+      await this._subscription.getByStudentId(this._storage.getUser.id, whereColumn, id).then(_ => {
         loader.dismiss();
         resolve(true);
       }).catch(async _ => {
         loader.dismiss();
-        const popover = await this.popoverCtrl.create({component: SubscriptionPage});
+        const popover = await this.popoverCtrl.create({
+          component: SubscriptionPage,
+          componentProps: props
+        });
         await popover.present();
         const { data } = await popover.onDidDismiss();
         if (data) resolve(true);

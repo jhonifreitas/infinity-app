@@ -6,6 +6,7 @@ import { Subscription } from 'src/app/models/subscription';
 
 import { UtilService } from 'src/app/services/util.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { AccessService } from 'src/app/services/firebase/access.service';
 import { SubscriptionService } from 'src/app/services/firebase/subscription.service';
 
 @Component({
@@ -21,52 +22,57 @@ export class SubscriptionPage implements OnInit {
   formGroup: FormGroup;
   
   private data = new Subscription();
-  private user = this._storage.getUser;
 
   constructor(
     private _util: UtilService,
     private navParams: NavParams,
+    private _access: AccessService,
     private _storage: StorageService,
     private formBuilder: FormBuilder,
     private popoverCtrl: PopoverController,
     private _subscription: SubscriptionService
   ) {
     this.formGroup = this.formBuilder.group({
-      accessCode: ['', Validators.required],
-      client: this.formBuilder.group({
-        id: [this.user.id, Validators.required],
-        name: [this.user.name, Validators.required]
-      }),
-      assessment: this.formBuilder.group({
-        id: ['', Validators.required],
-        name: ['', Validators.required]
-      })
+      accessCode: ['', Validators.required]
     });
   }
 
-  ngOnInit() {
-    this.controls.assessment.patchValue(this.navParams.get('assessment'));
-  }
+  ngOnInit(): void {}
 
   get controls() {
     return this.formGroup.controls;
   }
 
+  uppercase() {
+    const value: string = this.controls.accessCode.value;
+    this.controls.accessCode.setValue(value.toUpperCase());
+  }
+
   async onSubmit() {
     if (this.formGroup.valid) {
       const loader = await this._util.loading('Acessando...');
+      const accessCode: string = this.formGroup.value.accessCode;
+      const student = this._storage.getUser;
 
-      Object.assign(this.data, this.formGroup.value);
+      let whereColumn = 'assessments';
+      const id = this.navParams.get('assessmentId') || this.navParams.get('courseId') || this.navParams.get('mbaId');
 
-      await this._subscription.add(this.data).then(id => {
-        this.goToBack();
+      if (this.navParams.get('courseId')) whereColumn = 'courses';
+      else if (this.navParams.get('mbaId')) whereColumn = 'mbas';
+
+      this.data.student.id = student.id;
+      this.data.student.name = student.name;
+
+      await this._access.getByCode(accessCode, whereColumn, id).then(async sub => {
+        await this._subscription.add(this.data).then(id => {
+          this.goToBack(true);
+        });
       }).catch(err => this._util.message(err));
-
       loader.dismiss();
     } else this._util.message('Preencha os dados corretamente antes de prosseguir!');
   }
 
-  goToBack() {
-    this.popoverCtrl.dismiss();
+  goToBack(params?: any) {
+    this.popoverCtrl.dismiss(params);
   }
 }

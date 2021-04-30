@@ -58,13 +58,15 @@ export class LoginPage implements OnInit {
         if (credential.credential.signInMethod.indexOf('apple') > -1) data.authType = 'apple';
         else if (credential.credential.signInMethod.indexOf('facebook') > -1) data.authType = 'facebook';
 
-        await this._student.set(uid, data);
-
         await this._student.getById(uid).then(student => {
           if (student && !student.deletedAt) {
             this._storage.setUser = student;
             this.goToNext();
-          } else return Promise.reject('Aluno desativado!');
+          } else return Promise.reject('Deleted');
+        }).catch(async err => {
+          if (err === 'Deleted') return Promise.reject('Aluno desativado!');
+          await this._student.set(uid, data);
+          this.goToNext();
         });
         loader.dismiss();
       }

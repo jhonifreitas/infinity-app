@@ -14,7 +14,12 @@ const routes: Routes = [
   ]},
 
   { path: '', canActivate: [AuthGuard], children: [
-    { path: 'assessment/:id', canActivate: [SubscriptionGuard], loadChildren: () => import('./pages/assessment/form/form.module').then(m => m.AssessmentFormPageModule) },
+    {
+      path: 'assessment/:id',
+      data: {assessment: true},
+      canActivate: [SubscriptionGuard],
+      loadChildren: () => import('./pages/assessment/form/form.module').then(m => m.AssessmentFormPageModule)
+    },
   ]},
 ];
 @NgModule({
