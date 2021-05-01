@@ -20,7 +20,7 @@ export class SubscriptionPage implements OnInit {
   showAuth = false;
   togglePass = false;
   formGroup: FormGroup;
-  
+
   private data = new Subscription();
 
   constructor(
@@ -71,7 +71,7 @@ export class SubscriptionPage implements OnInit {
 
       await this._access.getByCode(accessCode, whereColumn, id).then(async access => {
         this.data.access.id = access.id;
-        await this._subscription.add(this.data).then(id => {
+        await this._subscription.add(this.data).then(_ => {
           this.goToBack(true);
         });
       }).catch(err => this._util.message(err));

@@ -7,7 +7,7 @@ export class Subscription extends Base {
   mbaId?: string;
   courseId?: string;
   assessmentId?: string;
-  
+
   constructor() {
     super();
     this.access = new Access();

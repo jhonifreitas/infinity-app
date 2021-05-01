@@ -30,7 +30,7 @@ export class Group extends Base {
   name: string;
   image: string;
   questions: string[];
-  
+
   _questions?: Question[];
 
   constructor() {

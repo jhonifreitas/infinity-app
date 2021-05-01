@@ -5,12 +5,11 @@ export class Application extends Base {
   end?: Date;
   student: Student;
   answers: Answer[];
-  
+
   mba?: MBA;
   course?: Course;
   assessment?: Assessment;
-  
-  
+
   constructor() {
     super();
     this.answers = [];
@@ -32,7 +31,7 @@ class Answer {
   neuro: {
     intensity: number;
     satisfaction: number;
-  }
+  };
 }
 
 class MBA {

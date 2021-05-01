@@ -29,8 +29,8 @@ export class SubscriptionGuard implements CanActivate {
         courseId?: string;
         assessmentId?: string;
       } = {};
-      
-      let whereColumn: string = 'assessmentId';
+
+      let whereColumn = 'assessmentId';
       if (route.data.assessment) props.assessmentId = id;
       else if (route.data.mba) {
         props.mbaId = id;

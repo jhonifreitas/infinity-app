@@ -29,6 +29,10 @@ ion-button {text-transform: none;}
 ion-list {background: transparent !important;}
 ion-alert, ion-picker, ion-modal, ion-loading, ion-menu {backdrop-filter: blur(7px);}
 
+body {
+  &.dark img.dark, img.light  {display: none;}
+}
+
 #vertical-align {
   height: 100%;
   display: flex;

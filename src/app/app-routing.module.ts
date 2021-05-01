@@ -6,7 +6,7 @@ import { SubscriptionGuard } from './guards/subscription.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: '/tabs/assessment', pathMatch: 'full' },
-  
+
   { path: 'tabs', canActivate: [AuthGuard], loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule) },
   { path: 'auth', children: [
     { path: 'entrar', loadChildren: () => import('./pages/auth/login/login.module').then(m => m.LoginPageModule) },

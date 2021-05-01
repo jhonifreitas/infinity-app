@@ -16,7 +16,8 @@
       "rules": {
         "curly": ["error", "multi"],
         "radix": ["error", "as-needed"],
-        "no-underscore-dangle": ["error", { "allowAfterThis": true }],
+        "id-blacklist": ["off"],
+        "no-underscore-dangle": ["off"],
         "@angular-eslint/component-class-suffix": [
           "error",
           {

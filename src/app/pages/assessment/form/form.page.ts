@@ -31,7 +31,7 @@ export class AssessmentFormPage implements OnInit {
   slideOpts = {
     autoHeight: true,
     allowTouchMove: false
-  }
+  };
 
   constructor(
     private _util: UtilService,
@@ -77,7 +77,7 @@ export class AssessmentFormPage implements OnInit {
     for (const groupId of this.assessment.groups) {
       const group = await this._group.getById(groupId);
       group._questions = [];
-      
+
       for (const questionId of group.questions) {
         const question = await this._question.getById(questionId);
         this.assessment._questions.push(question);
@@ -90,20 +90,19 @@ export class AssessmentFormPage implements OnInit {
   }
 
   getFormContact(type: 'neuro' | 'objective' | 'dissertation') {
-    if (type == 'neuro') {
+    if (type === 'neuro')
       return this.formBuilder.group({
         intensity: ['', Validators.required],
         satisfaction: ['', Validators.required]
       });
-    } else if (type == 'objective') {
+    else if (type === 'objective')
       return this.formBuilder.group({
         alternativeId: ['', Validators.required]
       });
-    } else {
+    else
       return this.formBuilder.group({
         text: ['', Validators.required]
       });
-    }
   }
 
   addQuestion(question: Question) {
@@ -133,7 +132,7 @@ export class AssessmentFormPage implements OnInit {
       'Atenção!',
       `Você tem ${this.assessment.duration} horas, a partir de agora para concluir.<h4>Boa sorte!</h4>`,
       'Iniciar', 'cancelar'
-    ).then(async _ => {  
+    ).then(async _ => {
       const loader = await this._util.loading('Iniciando...');
       await this._application.add(this.data);
       loader.dismiss();
@@ -142,7 +141,7 @@ export class AssessmentFormPage implements OnInit {
 
   onSubmit(formGroup: FormGroup) {
     if (formGroup.valid) {
-      
+
 
     } else this._util.message('Preencha os dados corretamente antes de prosseguir!');
   }

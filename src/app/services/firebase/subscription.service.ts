@@ -21,7 +21,7 @@ export class SubscriptionService extends FirebaseAbstract<Subscription> {
     const where = [
       new FirebaseWhere(whereColumn, '==', id),
       new FirebaseWhere('student.id', '==', studentId)
-    ]
+    ];
     return this.getWhereMany(where).then(res => res.length ? res[0] : Promise.reject('Not found!'));
   }
 }
