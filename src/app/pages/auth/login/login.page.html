@@ -9,22 +9,22 @@
 
       <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
 
-        <h5 class="ion-text-center ion-text-uppercase">
+        <h5 id="title" class="ion-text-center ion-text-uppercase">
           Seja Bem-vindo<br>
           A Infinity NeuroBusiness School
         </h5>
 
         <div id="social" class="ion-margin-top">
-          <ion-button color="light" id="facebook" expand="block" (click)="authSocial('facebook')">
+          <ion-button color="light" id="facebook" color="dark" expand="block" (click)="authSocial('facebook')">
             Continuar com Facebook
           </ion-button>
-          <ion-button color="light" id="google" expand="block" (click)="authSocial('google')">
+          <ion-button color="light" id="google" color="dark" expand="block" (click)="authSocial('google')">
             Continuar com Google
           </ion-button>
-          <ion-button color="light" id="apple" expand="block" *ngIf="isIOS" (click)="authSocial('apple')">
+          <ion-button color="light" id="apple" color="dark" expand="block" *ngIf="isIOS" (click)="authSocial('apple')">
             Continuar com Apple
           </ion-button>
-          <ion-button color="light" id="email" expand="block" (click)="showAuth = !showAuth">
+          <ion-button color="light" id="email" color="dark" expand="block" (click)="showAuth = !showAuth">
             Entrar com E-mail
           </ion-button>
         </div>

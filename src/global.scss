@@ -48,6 +48,19 @@ ion-alert, ion-picker, ion-modal, ion-loading, ion-menu {backdrop-filter: blur(7
   }
 }
 
+ion-item {
+  --background: none;
+  --padding-start: .5rem;
+  --inner-padding-end: .5rem;
+}
+
+ion-button {
+  height: auto;
+  --border-radius: 1rem;
+  --padding-top: 1.1rem;
+  --padding-bottom: 1.1rem;
+}
+
 @media (max-width: 991px) {
   #list-empty {min-height: 100%;}
 }

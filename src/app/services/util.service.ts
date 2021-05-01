@@ -52,7 +52,7 @@ export class UtilService {
     }).then(toast => toast.present());
   }
 
-  alertConfirm(title: string, msg: string, btnConfirm?: string, btnCancel?: string) {
+  alertConfirm(title: string, msg: string, btnConfirm?: string, btnCancel?: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
       this.alertCtrl.create({
         header: title || 'Atenção',
@@ -60,7 +60,7 @@ export class UtilService {
         buttons: [
           {
             text: btnCancel || 'Não Aceitar',
-            handler: () => reject()
+            handler: () => reject(false)
           }, {
             text: btnConfirm || 'Aceitar',
             handler: () => resolve(true)

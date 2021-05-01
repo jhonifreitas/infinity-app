@@ -4,9 +4,9 @@ export class Subscription extends Base {
   access: Access;
   student: Student;
 
-  mbaId: MBA;
-  courseId: Course;
-  assessment: Assessment;
+  mbaId?: string;
+  courseId?: string;
+  assessmentId?: string;
   
   constructor() {
     super();
@@ -21,21 +21,6 @@ class Access {
 }
 
 class Student {
-  id: string;
-  name: string;
-}
-
-class Course {
-  id: string;
-  name: string;
-}
-
-class Assessment {
-  id: string;
-  name: string;
-}
-
-class MBA {
   id: string;
   name: string;
 }

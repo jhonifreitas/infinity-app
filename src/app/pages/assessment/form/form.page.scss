@@ -1,0 +1,36 @@
+ion-content {
+  ion-slides {
+    min-height: 100%;
+   
+    ion-slide {
+      padding: 1rem 2rem;
+      display: block;
+
+      ion-item.question {
+        --background: none;
+        --padding-start: 0;
+        --inner-padding-end: 0;
+
+        ion-note[slot="start"] {
+          padding: 0;
+          width: 40px;
+          height: 40px;
+          display: flex;
+          font-weight: 600;
+          font-size: 1.2rem;
+          margin-top: .2rem;
+          border-radius: 5px;
+          margin-right: 1rem;
+          align-items: center;
+          justify-content: center;
+          color: var(--ion-color-dark-contrast);
+          background-color: var(--ion-color-dark);
+        }
+      }
+    }
+  }
+}
+
+ion-footer {
+  padding: 1rem;
+}

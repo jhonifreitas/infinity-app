@@ -1,9 +1,55 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Assessment</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="isBeginning ? goToBack() : prev()">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ assessment?.name }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  
+
+  <ion-slides #slides [options]="slideOpts" (ionSlideDidChange)="slideChanged($event)">
+    <!-- <ion-slide *ngFor="let instruction of assessment?._instructions">
+
+      <div [innerHtml]="instruction.text"></div>
+
+    </ion-slide> -->
+    <ion-slide *ngFor="let question of assessment?._questions | random; index as i">
+
+      <ion-item lines="none" class="question">
+        <ion-note slot="start">{{ i + 1 }}</ion-note>
+        <ion-label class="ion-text-wrap" [innerHtml]="question.text"></ion-label>
+      </ion-item>
+
+      <!-- NEURO -->
+      <ion-row *ngIf="question.type === 'neuro'">
+        <ion-col size="3">
+          <ion-button>
+            <img src="assets/icon/emotion-1.png" />
+          </ion-button>
+        </ion-col>
+      </ion-row>
+
+      <!-- OBJECTIVE -->
+      <div *ngIf="question.type === 'objective'">
+
+      </div>
+
+      <!-- OBJECTIVE -->
+      <div *ngIf="question.type === 'dissertation'">
+
+      </div>
+
+    </ion-slide>
+  </ion-slides>
+
 </ion-content>
+
+<ion-footer>
+  <ion-button type="button" expand="block" color="dark" (click)="next()">
+    {{ activeIndex == assessment?._instructions.length - 1 ? 'Iniciar o Assessment' : ( isEnd ? 'Finalizar' : 'Avançar') }}
+  </ion-button>
+</ion-footer>

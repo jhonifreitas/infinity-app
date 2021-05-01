@@ -8,11 +8,8 @@
 
   <ion-avatar>
     <ion-img *ngIf="data?.image" [src]="data.image"></ion-img>
-    <ion-icon *ngIf="!data?.image" color="primary" src="assets/icon/icon-no-image.svg"></ion-icon>
-    <ion-fab-button size="small" *ngIf="isCordova" (click)="takePhoto()">
-      <ion-icon size="small" name="pencil"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-button size="small" *ngIf="!isCordova" (click)="inputUpload.click()">
+    <ion-icon *ngIf="!data?.image" color="dark" src="assets/icon/icon-no-image.svg"></ion-icon>
+    <ion-fab-button size="small" color="dark" (click)="isCordova ? takePhoto() : inputUpload.click()">
       <ion-icon size="small" name="pencil"></ion-icon>
     </ion-fab-button>
     <input type="file" #inputUpload [hidden]="true" accept="image/png, image/jpeg" (change)="uploadPWA($event)">
@@ -36,7 +33,7 @@
       <ion-input type="text" formControlName="phone" [brmasker]="{phone: true}" maxlength="15"></ion-input>
     </ion-item>
 
-    <ion-button type="submit" expand="block" class="ion-margin-top" [disabled]="formGroup.invalid">Salvar</ion-button>
+    <ion-button type="submit" expand="block" class="ion-margin-top" color="dark" [disabled]="formGroup.invalid">Salvar</ion-button>
     <ion-button type="button" expand="block" class="ion-margin-top" color="danger" (click)="logout()">Sair</ion-button>
   </form>
 </ion-content>

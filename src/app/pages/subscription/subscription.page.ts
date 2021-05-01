@@ -57,13 +57,20 @@ export class SubscriptionPage implements OnInit {
       let whereColumn = 'assessments';
       const id = this.navParams.get('assessmentId') || this.navParams.get('courseId') || this.navParams.get('mbaId');
 
-      if (this.navParams.get('courseId')) whereColumn = 'courses';
-      else if (this.navParams.get('mbaId')) whereColumn = 'mbas';
+      if (this.navParams.get('courseId')) {
+        whereColumn = 'courses';
+        this.data.courseId = id;
+      } else if (this.navParams.get('mbaId')) {
+        whereColumn = 'mbas';
+        this.data.mbaId = id;
+      } else this.data.assessmentId = id;
 
+      this.data.access.code = accessCode;
       this.data.student.id = student.id;
       this.data.student.name = student.name;
 
-      await this._access.getByCode(accessCode, whereColumn, id).then(async sub => {
+      await this._access.getByCode(accessCode, whereColumn, id).then(async access => {
+        this.data.access.id = access.id;
         await this._subscription.add(this.data).then(id => {
           this.goToBack(true);
         });
