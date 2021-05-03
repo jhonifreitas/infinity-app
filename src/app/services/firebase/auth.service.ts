@@ -32,15 +32,14 @@ export class AuthService {
           this._storage.setUser = data;
           resolve(uid);
         });
-      }).catch(err => reject(AuthErrorCodeMessages.auth[err.code] || 'Houve um erro ao realizar o cadastro. Por favor, tente novamente.'));
+      }).catch(err => reject(AuthErrorCodeMessages.auth[err.code] || err));
     });
   }
 
   async signInEmail(email: string, password: string): Promise<string> {
     return this.auth.signInWithEmailAndPassword(email, password)
       .then(credential => credential.user.uid)
-      .catch(err =>
-        Promise.reject(AuthErrorCodeMessages.auth[err.code] || 'Houve um erro ao realizar o login. Por favor, tente novamente.'));
+      .catch(err => Promise.reject(AuthErrorCodeMessages.auth[err.code] || err));
   }
 
   signInGoogle(): Promise<void> {
@@ -61,8 +60,7 @@ export class AuthService {
 
   async getRedirectResult(): Promise<firebase.auth.UserCredential> {
     return this.auth.getRedirectResult()
-      .catch(err =>
-        Promise.reject(AuthErrorCodeMessages.auth[err.code] || 'Houve um erro ao realizar o login. Por favor, tente novamente.'));
+      .catch(err => Promise.reject(AuthErrorCodeMessages.auth[err.code] || err));
   }
 
   resetPassword(email: string) {
