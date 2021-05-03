@@ -191,7 +191,7 @@ export class AssessmentFormPage implements OnInit {
       } else {
         if (this.showingQuestion) await this.onSubmit();
         else if (this.activeIndex + 1 === this.assessment.instructions.length) await this.createApplication();
-  
+
         this.ionSlides.slideNext();
         this.isEnd = await this.ionSlides.isEnd();
         this.isBeginning = await this.ionSlides.isBeginning();
@@ -228,9 +228,7 @@ export class AssessmentFormPage implements OnInit {
         if (this.isEnd) this.showSuccess = true;
         this.updatePercent();
       });
-    } else {
-      return Promise.reject('Preencha os dados corretamente antes de prosseguir!');
-    }
+    } else return Promise.reject('Preencha os dados corretamente antes de prosseguir!');
   }
 
   goToBack() {

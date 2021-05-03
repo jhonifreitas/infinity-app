@@ -37,7 +37,7 @@ export class ApplicationService extends FirebaseAbstract<Application> {
     const where = [
       new FirebaseWhere('assessment.id', '==', id),
       new FirebaseWhere('student.id', '==', this._storage.getUser.id)
-    ]
+    ];
     return this.getWhereMany(where).then(docs => {
       if (docs.length) return docs[0];
       return Promise.reject('Not found!');
