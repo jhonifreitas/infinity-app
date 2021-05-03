@@ -18,13 +18,9 @@ export class Application extends Base {
   }
 }
 
-class Student {
-  id: string;
-  code: string;
-}
-
-class Answer {
+export class Answer {
   datetime: Date;
+  questionId: string;
 
   text?: string;
   alternativeId?: string;
@@ -32,19 +28,28 @@ class Answer {
     intensity: number;
     satisfaction: number;
   };
+
+  constructor() {
+    this.datetime = new Date();
+  }
+}
+
+class Student {
+  id: string;
+  name: string;
 }
 
 class MBA {
   id: string;
-  code: string;
+  name: string;
 }
 
 class Course {
   id: string;
-  code: string;
+  name: string;
 }
 
 class Assessment {
   id: string;
-  code: string;
+  name: string;
 }

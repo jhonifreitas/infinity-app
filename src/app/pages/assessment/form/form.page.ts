@@ -1,17 +1,19 @@
 import { ActivatedRoute } from '@angular/router';
 import { IonSlides, NavController } from '@ionic/angular';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { Application } from 'src/app/models/application';
 import { Assessment, Question } from 'src/app/models/assessment';
+import { Application, Answer } from 'src/app/models/application';
+
+import { RandomPipe } from 'src/app/pipes/random.pipe';
 
 import { UtilService } from 'src/app/services/util.service';
+import { ApplicationService } from 'src/app/services/firebase/application.service';
 import { AssessmentService } from 'src/app/services/firebase/assessment/assessment.service';
 import { AssessmentGroupService } from 'src/app/services/firebase/assessment/group.service';
 import { AssessmentQuestionService } from 'src/app/services/firebase/assessment/question.service';
 import { AssessmentInstructionService } from 'src/app/services/firebase/assessment/instruction.service';
-import { ApplicationService } from 'src/app/services/firebase/application.service';
 
 @Component({
   selector: 'app-assessment-form',
@@ -23,10 +25,13 @@ export class AssessmentFormPage implements OnInit {
   @ViewChild('slides') ionSlides: IonSlides;
 
   isEnd = false;
+  percentage = 0;
   activeIndex = 0;
   isBeginning = true;
+  showSuccess = false;
   formGroup: FormGroup;
   assessment: Assessment;
+  showingQuestion = false;
   data = new Application();
   slideOpts = {
     autoHeight: true,
@@ -35,6 +40,7 @@ export class AssessmentFormPage implements OnInit {
 
   constructor(
     private _util: UtilService,
+    private randomPipe: RandomPipe,
     private navCtrl: NavController,
     private formBuilder: FormBuilder,
     private _group: AssessmentGroupService,
@@ -43,24 +49,35 @@ export class AssessmentFormPage implements OnInit {
     private _application: ApplicationService,
     private _question: AssessmentQuestionService,
     private _instruction: AssessmentInstructionService,
-  ) {
-    this.formGroup = this.formBuilder.group({
-      answers: this.formBuilder.array([])
-    });
-  }
+  ) { }
 
   async ngOnInit() {
     const loader = await this._util.loading();
+
+    await this.getAssessment();
+    await this.checkStarted();
+
+    loader.dismiss();
+  }
+
+  get controls() {
+    return this.formGroup?.controls;
+  }
+
+  async getAssessment() {
     const id = this.activatedRoute.snapshot.paramMap.get('id');
     await this._assessment.getById(id).then(async assessment => {
       this.assessment = assessment;
+      this.data.assessment = {
+        id: assessment.id,
+        name: assessment.name
+      };
       await this.getInstructions();
-      await this.getGroups();
+      await this.getQuestions();
     }).catch(err => {
       this._util.message('Assessment não encontrado!');
       this.goToBack();
     });
-    loader.dismiss();
   }
 
   async getInstructions() {
@@ -71,7 +88,7 @@ export class AssessmentFormPage implements OnInit {
     }
   }
 
-  async getGroups() {
+  async getQuestions() {
     this.assessment._groups = [];
     this.assessment._questions = [];
     for (const groupId of this.assessment.groups) {
@@ -81,37 +98,81 @@ export class AssessmentFormPage implements OnInit {
       for (const questionId of group.questions) {
         const question = await this._question.getById(questionId);
         this.assessment._questions.push(question);
-        this.addQuestion(question);
         group._questions.push(question);
       }
 
       this.assessment._groups.push(group);
     }
+
+    this.assessment._questions = this.randomPipe.transform(this.assessment._questions);
   }
 
-  getFormContact(type: 'neuro' | 'objective' | 'dissertation') {
+  getFormGroup(type: 'neuro' | 'objective' | 'dissertation') {
     if (type === 'neuro')
       return this.formBuilder.group({
-        intensity: ['', Validators.required],
-        satisfaction: ['', Validators.required]
+        questionId: ['', Validators.required],
+        neuro: this.formBuilder.group({
+          intensity: ['', Validators.required],
+          satisfaction: ['', Validators.required]
+        })
       });
     else if (type === 'objective')
       return this.formBuilder.group({
+        questionId: ['', Validators.required],
         alternativeId: ['', Validators.required]
       });
     else
       return this.formBuilder.group({
+        questionId: ['', Validators.required],
         text: ['', Validators.required]
       });
   }
 
-  addQuestion(question: Question) {
-    const formGroup = this.getFormContact(question.type);
-    (this.formGroup.get('answers') as FormArray).push(formGroup);
+  async checkStarted() {
+    const id = this.activatedRoute.snapshot.paramMap.get('id');
+    await this._application.getByAssessmentId(id).then(app => {
+      const end = new Date(app.init);
+      end.setHours(end.getHours() + this.assessment.duration);
+      const inProgress = !app.end && new Date() < end;
+
+      let message = 'Você já realizou esse Assessment.<br><br>Deseja fazer novamente?';
+      if (inProgress) message = 'Você ainda não terminou esse Assessment.<br><br>Deseja continuar?';
+
+      this._util.alertConfirm('Atenção!', message, 'sim', 'não').then(async _ => {
+        if (inProgress) {
+          const dones: Question[] = [];
+          const notDones: Question[] = [];
+
+          this.data = app;
+
+          this.assessment._questions.forEach(question => {
+            if (app.answers.find(answer => answer.questionId === question.id)) dones.push(question);
+            else notDones.push(question);
+          });
+
+          this.assessment._questions = [...dones, ...this.randomPipe.transform(notDones)];
+          const index = this.assessment.instructions.length + dones.length;
+          this.ionSlides.slideTo(index);
+          this.isEnd = await this.ionSlides.isEnd();
+          this.isBeginning = await this.ionSlides.isBeginning();
+          this.updatePercent();
+        }
+      }).catch(_ => this.goToBack());
+    }).catch(_ => {});
   }
 
   async slideChanged() {
     this.activeIndex = await this.ionSlides.getActiveIndex();
+    if (this.activeIndex + 1 > this.assessment._instructions.length) {
+      const index = this.activeIndex - this.assessment._instructions.length;
+      this.showingQuestion = true;
+      const question = this.assessment._questions[index];
+      this.formGroup = this.getFormGroup(question.type);
+      this.controls.questionId.setValue(question.id);
+    } else {
+      this.formGroup = null;
+      this.showingQuestion = false;
+    }
   }
 
   async prev() {
@@ -121,10 +182,27 @@ export class AssessmentFormPage implements OnInit {
   }
 
   async next() {
-    if (this.activeIndex === this.assessment.instructions.length - 1) await this.createApplication();
-    this.ionSlides.slideNext();
-    this.isEnd = await this.ionSlides.isEnd();
-    this.isBeginning = await this.ionSlides.isBeginning();
+    try {
+      if (this.isEnd) {
+        const loader = await this._util.loading('Salvando...');
+        this.data.end = new Date();
+        await this.onSubmit().catch(error => this._util.message(error));
+        loader.dismiss();
+      } else {
+        if (this.showingQuestion) await this.onSubmit();
+        else if (this.activeIndex + 1 === this.assessment.instructions.length) await this.createApplication();
+  
+        this.ionSlides.slideNext();
+        this.isEnd = await this.ionSlides.isEnd();
+        this.isBeginning = await this.ionSlides.isBeginning();
+      }
+    } catch (error) {
+      if (error) this._util.message(error);
+    }
+  }
+
+  updatePercent() {
+    this.percentage = this.data.answers.length / this.assessment._questions.length;
   }
 
   async createApplication() {
@@ -134,16 +212,25 @@ export class AssessmentFormPage implements OnInit {
       'Iniciar', 'cancelar'
     ).then(async _ => {
       const loader = await this._util.loading('Iniciando...');
-      await this._application.add(this.data);
+      await this._application.save(this.data).then(id => {
+        if (id) this.data.id = id;
+      });
       loader.dismiss();
-    }).catch(_ => {});
+    });
   }
 
-  onSubmit(formGroup: FormGroup) {
-    if (formGroup.valid) {
+  async onSubmit() {
+    if (this.formGroup.valid) {
+      const answer = Object.assign(new Answer(), this.formGroup.value) as Answer;
 
-
-    } else this._util.message('Preencha os dados corretamente antes de prosseguir!');
+      this.data.answers.push(answer);
+      await this._application.update(this.data.id, this.data).then(_ => {
+        if (this.isEnd) this.showSuccess = true;
+        this.updatePercent();
+      });
+    } else {
+      return Promise.reject('Preencha os dados corretamente antes de prosseguir!');
+    }
   }
 
   goToBack() {

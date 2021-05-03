@@ -4,7 +4,6 @@ import { PopoverController } from '@ionic/angular';
 import { ActivatedRouteSnapshot, CanActivate } from '@angular/router';
 
 import { UtilService } from '../services/util.service';
-import { StorageService } from 'src/app/services/storage.service';
 import { SubscriptionPage } from '../pages/subscription/subscription.page';
 import { SubscriptionService } from '../services/firebase/subscription.service';
 
@@ -15,7 +14,6 @@ export class SubscriptionGuard implements CanActivate {
 
   constructor(
     private _util: UtilService,
-    private _storage: StorageService,
     private popoverCtrl: PopoverController,
     private _subscription: SubscriptionService,
   ){ }
@@ -40,7 +38,7 @@ export class SubscriptionGuard implements CanActivate {
         whereColumn = 'courseId';
       }
 
-      await this._subscription.getByStudentId(this._storage.getUser.id, whereColumn, id).then(_ => {
+      await this._subscription.getByStudentId(whereColumn, id).then(_ => {
         loader.dismiss();
         resolve(true);
       }).catch(async _ => {

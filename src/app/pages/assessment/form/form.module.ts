@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AssessmentFormPage } from './form.page';
 import { RandomPipe } from 'src/app/pipes/random.pipe';
@@ -12,8 +12,10 @@ import { RandomPipe } from 'src/app/pipes/random.pipe';
     IonicModule,
     FormsModule,
     CommonModule,
+    ReactiveFormsModule,
     RouterModule.forChild([{ path: '', component: AssessmentFormPage }])
   ],
-  declarations: [AssessmentFormPage, RandomPipe],
+  declarations: [AssessmentFormPage],
+  providers: [RandomPipe]
 })
 export class AssessmentFormPageModule {}

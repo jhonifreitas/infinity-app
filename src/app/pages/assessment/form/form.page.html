@@ -10,14 +10,15 @@
 </ion-header>
 
 <ion-content>
+  <ion-progress-bar *ngIf="showingQuestion && !showSuccess" [value]="percentage"></ion-progress-bar>
 
-  <ion-slides #slides [options]="slideOpts" (ionSlideDidChange)="slideChanged($event)">
-    <!-- <ion-slide *ngFor="let instruction of assessment?._instructions">
+  <ion-slides #slides [scrollbar]="true" [options]="slideOpts" (ionSlideDidChange)="slideChanged()" *ngIf="!showSuccess">
+    <ion-slide *ngFor="let instruction of assessment?._instructions">
 
       <div [innerHtml]="instruction.text"></div>
 
-    </ion-slide> -->
-    <ion-slide *ngFor="let question of assessment?._questions | random; index as i">
+    </ion-slide>
+    <ion-slide *ngFor="let question of assessment?._questions; index as i">
 
       <ion-item lines="none" class="question">
         <ion-note slot="start">{{ i + 1 }}</ion-note>
@@ -25,31 +26,119 @@
       </ion-item>
 
       <!-- NEURO -->
-      <ion-row *ngIf="question.type === 'neuro'">
-        <ion-col size="3">
-          <ion-button>
-            <img src="assets/icon/emotion-1.png" />
-          </ion-button>
-        </ion-col>
-      </ion-row>
+      <ng-container *ngIf="question.type === 'neuro' && controls">
+        <ng-container [formGroup]="controls.neuro">
+          <ion-radio-group formControlName="satisfaction">
+            <ion-row>
+              <ion-col size="3">
+                <ion-item button lines="none">
+                  <ion-label>
+                    <ion-icon name="sad"></ion-icon>
+                    <ion-radio [value]="1"></ion-radio>
+                  </ion-label>
+                </ion-item>
+              </ion-col>
+              <ion-col size="3">
+                <ion-item button lines="none">
+                  <ion-label>
+                    <ion-icon name="sad"></ion-icon>
+                    <ion-radio [value]="2"></ion-radio>
+                  </ion-label>
+                </ion-item>
+              </ion-col>
+              <ion-col size="3">
+                <ion-item button lines="none">
+                  <ion-label>
+                    <ion-icon name="happy"></ion-icon>
+                    <ion-radio [value]="3"></ion-radio>
+                  </ion-label>
+                </ion-item>
+              </ion-col>
+              <ion-col size="3">
+                <ion-item button lines="none">
+                  <ion-label>
+                    <ion-icon name="happy"></ion-icon>
+                    <ion-radio [value]="4"></ion-radio>
+                  </ion-label>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+          </ion-radio-group>
+          
+          <ion-radio-group formControlName="intensity">
+            <ion-row>
+              <ion-col size="3">
+                <ion-item button lines="none">
+                  <ion-label>
+                    <ion-icon name="stats-chart"></ion-icon>
+                    <ion-radio [value]="1"></ion-radio>
+                  </ion-label>
+                </ion-item>
+              </ion-col>
+              <ion-col size="3">
+                <ion-item button lines="none">
+                  <ion-label>
+                    <ion-icon name="stats-chart"></ion-icon>
+                    <ion-radio [value]="2"></ion-radio>
+                  </ion-label>
+                </ion-item>
+              </ion-col>
+              <ion-col size="3">
+                <ion-item button lines="none">
+                  <ion-label>
+                    <ion-icon name="stats-chart"></ion-icon>
+                    <ion-radio [value]="3"></ion-radio>
+                  </ion-label>
+                </ion-item>
+              </ion-col>
+              <ion-col size="3">
+                <ion-item button lines="none">
+                  <ion-label>
+                    <ion-icon name="stats-chart"></ion-icon>
+                    <ion-radio [value]="4"></ion-radio>
+                  </ion-label>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+          </ion-radio-group>
+        </ng-container>
+      </ng-container>
 
       <!-- OBJECTIVE -->
-      <div *ngIf="question.type === 'objective'">
-
-      </div>
+      <ng-container *ngIf="question.type === 'objective' && controls">
+        <ion-radio-group [formControl]="controls.alternativeId">
+          <ion-item lines="none" *ngFor="let alternative of question.alternatives">
+            <ion-radio slot="start" [value]="alternative.id"></ion-radio>
+            <ion-label>{{ alternative.text }}</ion-label>
+          </ion-item>
+        </ion-radio-group>
+      </ng-container>
 
       <!-- OBJECTIVE -->
-      <div *ngIf="question.type === 'dissertation'">
-
-      </div>
-
+      <ng-container *ngIf="question.type === 'dissertation' && controls">
+        <ion-item lines="none">
+          <ion-label position="floating">Resposta</ion-label>
+          <ion-textarea [formControl]="controls.text"></ion-textarea>
+        </ion-item>
+      </ng-container>
     </ion-slide>
   </ion-slides>
+
+  <div id="vertical-align" *ngIf="showSuccess">
+    <div class="container ion-text-center">
+      <h2>Obrigado por suas respostas</h2>
+      <h2>Seu tempo de conclusão</h2>
+    </div>
+  </div>
 
 </ion-content>
 
 <ion-footer>
-  <ion-button type="button" expand="block" color="dark" (click)="next()">
+  <ion-button type="button" expand="block" color="dark" *ngIf="!showSuccess" (click)="next()">
     {{ activeIndex == assessment?._instructions.length - 1 ? 'Iniciar o Assessment' : ( isEnd ? 'Finalizar' : 'Avançar') }}
+  </ion-button>
+
+  <ion-button type="button" expand="block" color="dark" *ngIf="showSuccess" (click)="goToBack()">
+    Sair
   </ion-button>
 </ion-footer>

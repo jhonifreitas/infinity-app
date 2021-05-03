@@ -1,6 +1,6 @@
 ion-content {
   ion-slides {
-    min-height: 100%;
+    min-height: calc(100% - 4px);
    
     ion-slide {
       padding: 1rem 2rem;
@@ -18,13 +18,25 @@ ion-content {
           display: flex;
           font-weight: 600;
           font-size: 1.2rem;
-          margin-top: .2rem;
           border-radius: 5px;
-          margin-right: 1rem;
           align-items: center;
           justify-content: center;
+          margin: auto 1rem auto 0;
           color: var(--ion-color-dark-contrast);
           background-color: var(--ion-color-dark);
+        }
+      }
+
+      ion-radio-group {
+        ion-item {
+          --padding-start: 0;
+          --inner-padding-end: 0;
+          ion-radio {margin: auto;}
+          ion-icon {
+            display: block;
+            font-size: 3rem;
+            margin: 0 auto .5rem auto;
+          }
         }
       }
     }
