@@ -138,22 +138,22 @@ export class AssessmentFormPage implements OnInit {
       const end = new Date(app.init);
       end.setHours(end.getHours() + this.assessment.duration);
       const inProgress = !app.end && new Date() < end;
-  
+
       let message = 'Você já realizou esse Assessment.<br><br>Deseja fazer novamente?';
       if (inProgress) message = 'Você ainda não terminou esse Assessment.<br><br>Deseja continuar?';
-  
+
       this._util.alertConfirm('Atenção!', message, 'sim', 'não').then(async _ => {
         if (inProgress) {
           const dones: Question[] = [];
           const notDones: Question[] = [];
-  
+
           this.data = app;
-  
+
           this.assessment._questions.forEach(question => {
             if (app.answers.find(answer => answer.questionId === question.id)) dones.push(question);
             else notDones.push(question);
           });
-  
+
           this.assessment._questions = [...dones, ...this.randomPipe.transform(notDones)];
           const index = this.assessment.instructions.length + dones.length;
           this.ionSlides.slideTo(index);
