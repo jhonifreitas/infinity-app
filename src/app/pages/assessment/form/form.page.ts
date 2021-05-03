@@ -130,35 +130,37 @@ export class AssessmentFormPage implements OnInit {
 
   async checkStarted() {
     const id = this.activatedRoute.snapshot.paramMap.get('id');
-    await this._application.getByAssessmentId(id).then(app => {
-      const end = new Date(app.init);
-      end.setHours(end.getHours() + this.assessment.duration);
-      const inProgress = !app.end && new Date() < end;
+    const apps = await this._application.getByAssessmentId(id);
 
-      let message = 'Você já realizou esse Assessment.<br><br>Deseja fazer novamente?';
-      if (inProgress) message = 'Você ainda não terminou esse Assessment.<br><br>Deseja continuar?';
+    const app = apps.find(application => !application.end) || apps.find(application => application.end);
 
-      this._util.alertConfirm('Atenção!', message, 'sim', 'não').then(async _ => {
-        if (inProgress) {
-          const dones: Question[] = [];
-          const notDones: Question[] = [];
+    const end = new Date(app.init);
+    end.setHours(end.getHours() + this.assessment.duration);
+    const inProgress = !app.end && new Date() < end;
 
-          this.data = app;
+    let message = 'Você já realizou esse Assessment.<br><br>Deseja fazer novamente?';
+    if (inProgress) message = 'Você ainda não terminou esse Assessment.<br><br>Deseja continuar?';
 
-          this.assessment._questions.forEach(question => {
-            if (app.answers.find(answer => answer.questionId === question.id)) dones.push(question);
-            else notDones.push(question);
-          });
+    this._util.alertConfirm('Atenção!', message, 'sim', 'não').then(async _ => {
+      if (inProgress) {
+        const dones: Question[] = [];
+        const notDones: Question[] = [];
 
-          this.assessment._questions = [...dones, ...this.randomPipe.transform(notDones)];
-          const index = this.assessment.instructions.length + dones.length;
-          this.ionSlides.slideTo(index);
-          this.isEnd = await this.ionSlides.isEnd();
-          this.isBeginning = await this.ionSlides.isBeginning();
-          this.updatePercent();
-        }
-      }).catch(_ => this.goToBack());
-    }).catch(_ => {});
+        this.data = app;
+
+        this.assessment._questions.forEach(question => {
+          if (app.answers.find(answer => answer.questionId === question.id)) dones.push(question);
+          else notDones.push(question);
+        });
+
+        this.assessment._questions = [...dones, ...this.randomPipe.transform(notDones)];
+        const index = this.assessment.instructions.length + dones.length;
+        this.ionSlides.slideTo(index);
+        this.isEnd = await this.ionSlides.isEnd();
+        this.isBeginning = await this.ionSlides.isBeginning();
+        this.updatePercent();
+      }
+    }).catch(_ => this.goToBack());
   }
 
   async slideChanged() {
@@ -190,7 +192,7 @@ export class AssessmentFormPage implements OnInit {
         loader.dismiss();
       } else {
         if (this.showingQuestion) await this.onSubmit();
-        else if (this.activeIndex + 1 === this.assessment.instructions.length) await this.createApplication();
+        else if (this.activeIndex + 1 === this.assessment.instructions.length && !this.data.id) await this.createApplication();
 
         this.ionSlides.slideNext();
         this.isEnd = await this.ionSlides.isEnd();
