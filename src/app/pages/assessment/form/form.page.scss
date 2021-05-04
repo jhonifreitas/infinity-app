@@ -28,14 +28,20 @@ ion-content {
       }
 
       ion-radio-group.neuro {
-        ion-item {
-          --padding-start: 0;
-          --inner-padding-end: 0;
-          ion-radio {margin: auto;}
-          ion-icon {
-            display: block;
-            font-size: 3rem;
-            margin: 0 auto .5rem auto;
+        ion-row {
+          margin: 0 -1rem;
+          ion-col {
+            padding: 0;
+            ion-item {
+              --padding-start: 0;
+              --inner-padding-end: 0;
+              ion-radio {margin: auto;}
+              ion-icon {
+                display: block;
+                font-size: 3rem;
+                margin: 0 auto .5rem auto;
+              }
+            }
           }
         }
       }

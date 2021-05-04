@@ -6,7 +6,7 @@
 
 <ion-content>
   <ion-list *ngIf="items?.length">
-    <ion-item button lines="none" *ngFor="let item of items" color="dark" routerLink="/assessment/{{ item.id }}">
+    <ion-item button detail="false" lines="none" *ngFor="let item of items" color="dark" routerLink="/assessment/{{ item.id }}">
       <ion-label class="ion-text-center">{{ item.name }}</ion-label>
     </ion-item>
   </ion-list>

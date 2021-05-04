@@ -32,33 +32,33 @@
             <ion-radio-group class="neuro" formControlName="satisfaction">
               <ion-row>
                 <ion-col size="3">
-                  <ion-item button lines="none">
+                  <ion-item button mode="md" lines="none">
                     <ion-label>
-                      <ion-icon name="sad"></ion-icon>
+                      <ion-icon src="assets/icon/emotion-1.svg"></ion-icon>
                       <ion-radio [value]="1"></ion-radio>
                     </ion-label>
                   </ion-item>
                 </ion-col>
                 <ion-col size="3">
-                  <ion-item button lines="none">
+                  <ion-item button mode="md" lines="none">
                     <ion-label>
-                      <ion-icon name="sad"></ion-icon>
+                      <ion-icon src="assets/icon/emotion-2.svg"></ion-icon>
                       <ion-radio [value]="2"></ion-radio>
                     </ion-label>
                   </ion-item>
                 </ion-col>
                 <ion-col size="3">
-                  <ion-item button lines="none">
+                  <ion-item button mode="md" lines="none">
                     <ion-label>
-                      <ion-icon name="happy"></ion-icon>
+                      <ion-icon src="assets/icon/emotion-3.svg"></ion-icon>
                       <ion-radio [value]="3"></ion-radio>
                     </ion-label>
                   </ion-item>
                 </ion-col>
                 <ion-col size="3">
-                  <ion-item button lines="none">
+                  <ion-item button mode="md" lines="none">
                     <ion-label>
-                      <ion-icon name="happy"></ion-icon>
+                      <ion-icon src="assets/icon/emotion-4.svg"></ion-icon>
                       <ion-radio [value]="4"></ion-radio>
                     </ion-label>
                   </ion-item>
@@ -69,33 +69,33 @@
             <ion-radio-group class="neuro" formControlName="intensity">
               <ion-row>
                 <ion-col size="3">
-                  <ion-item button lines="none">
+                  <ion-item button mode="md" lines="none">
                     <ion-label>
-                      <ion-icon name="stats-chart"></ion-icon>
+                      <ion-icon src="assets/icon/intensity-1.svg"></ion-icon>
                       <ion-radio [value]="1"></ion-radio>
                     </ion-label>
                   </ion-item>
                 </ion-col>
                 <ion-col size="3">
-                  <ion-item button lines="none">
+                  <ion-item button mode="md" lines="none">
                     <ion-label>
-                      <ion-icon name="stats-chart"></ion-icon>
+                      <ion-icon src="assets/icon/intensity-2.svg"></ion-icon>
                       <ion-radio [value]="2"></ion-radio>
                     </ion-label>
                   </ion-item>
                 </ion-col>
                 <ion-col size="3">
-                  <ion-item button lines="none">
+                  <ion-item button mode="md" lines="none">
                     <ion-label>
-                      <ion-icon name="stats-chart"></ion-icon>
+                      <ion-icon src="assets/icon/intensity-3.svg"></ion-icon>
                       <ion-radio [value]="3"></ion-radio>
                     </ion-label>
                   </ion-item>
                 </ion-col>
                 <ion-col size="3">
-                  <ion-item button lines="none">
+                  <ion-item button mode="md" lines="none">
                     <ion-label>
-                      <ion-icon name="stats-chart"></ion-icon>
+                      <ion-icon src="assets/icon/intensity-4.svg"></ion-icon>
                       <ion-radio [value]="4"></ion-radio>
                     </ion-label>
                   </ion-item>
@@ -110,7 +110,7 @@
       <ng-container *ngIf="question.type === 'objective' && controls?.alternativeId">
         <form [formGroup]="formGroup">
           <ion-radio-group formControlName="alternativeId">
-            <ion-item lines="none" *ngFor="let alternative of question.alternatives; index as alternativeId">
+            <ion-item lines="none" mode="md" *ngFor="let alternative of question.alternatives; index as alternativeId">
               <ion-radio slot="start" class="ion-margin-end" [value]="alternativeId"></ion-radio>
               <ion-label class="ion-text-wrap">{{ alternative.text }}</ion-label>
             </ion-item>
