@@ -3,6 +3,8 @@ import { IonSlides, NavController } from '@ionic/angular';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { intervalToDuration, Duration } from 'date-fns';
+
 import { Assessment, Question } from 'src/app/models/assessment';
 import { Application, Answer } from 'src/app/models/application';
 
@@ -27,6 +29,7 @@ export class AssessmentFormPage implements OnInit {
   isEnd = false;
   percentage = 0;
   activeIndex = 0;
+  timer: Duration;
   isBeginning = true;
   showSuccess = false;
   formGroup: FormGroup;
@@ -234,17 +237,20 @@ export class AssessmentFormPage implements OnInit {
       else this.data.answers.push(answer);
 
       await this._application.update(this.data.id, this.data).then(_ => {
-        if (this.isEnd) this.showSuccess = true;
+        if (this.isEnd) {
+          this.timer = intervalToDuration({start: this.data.init, end: this.data.end});
+          this.showSuccess = true;
+        }
         this.updatePercent();
       });
     } else return Promise.reject('Preencha os dados corretamente antes de prosseguir!');
   }
 
   goToBack() {
-    if (this.data.id && !this.data.end) {
+    if (this.data.id && !this.data.end)
       this._util.alertConfirm('Atenção!', 'Deseja mesmo sair?', 'Sim', 'Não')
         .then(_ => this.navCtrl.back())
         .catch(_ => {});
-    } else this.navCtrl.back();
+    else this.navCtrl.back();
   }
 }
