@@ -125,13 +125,13 @@
 
       <ion-row>
         <ion-col size="3" *ngIf="timer.hours">
-          <circle-progress [title]="timer.hours" subtitle="horas" [percent]="timer.hours / 0.6"></circle-progress>
+          <circle-progress [title]="timer.hours.toString()" subtitle="horas" [percent]="timer.hours / 0.6"></circle-progress>
         </ion-col>
         <ion-col [size]="timer.hours ? 3 : 6" *ngIf="timer.minutes">
-          <circle-progress [title]="timer.minutes" subtitle="minutos" [percent]="timer.minutes / 0.6"></circle-progress>
+          <circle-progress [title]="timer.minutes.toString()" subtitle="minutos" [percent]="timer.minutes / 0.6"></circle-progress>
         </ion-col>
         <ion-col [size]="timer.hours ? 3 : (timer.minutes ? 6 : 12)">
-          <circle-progress [title]="timer.seconds" subtitle="segundos" [percent]="timer.seconds / 0.6"></circle-progress>
+          <circle-progress [title]="timer.seconds.toString()" subtitle="segundos" [percent]="timer.seconds / 0.6"></circle-progress>
         </ion-col>
       </ion-row>
     </div>
