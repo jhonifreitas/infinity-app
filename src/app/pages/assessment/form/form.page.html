@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button (click)="isBeginning ? goToBack() : prev()">
+      <ion-button (click)="goToBack()">
         <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -107,26 +107,14 @@
       </ng-container>
 
       <!-- OBJECTIVE -->
-      <ng-container *ngIf="question.type === 'objective' && controls?.alternativeId">
-        <form [formGroup]="formGroup">
-          <ion-radio-group formControlName="alternativeId">
-            <ion-item lines="none" mode="md" *ngFor="let alternative of question.alternatives; index as alternativeId">
-              <ion-radio slot="start" class="ion-margin-end" [value]="alternativeId"></ion-radio>
-              <ion-label class="ion-text-wrap">{{ alternative.text }}</ion-label>
-            </ion-item>
-          </ion-radio-group>
-        </form>
-      </ng-container>
-
-      <!-- OBJECTIVE -->
-      <ng-container *ngIf="question.type === 'dissertation' && controls?.text">
-        <form [formGroup]="formGroup">
-          <ion-item>
-            <ion-label position="floating">Resposta</ion-label>
-            <ion-textarea rows="6" formControlName="text"></ion-textarea>
+      <form [formGroup]="formGroup" class="ion-margin-top" *ngIf="question.type !== 'neuro' && controls?.alternative">
+        <ion-radio-group formControlName="alternative">
+          <ion-item lines="none" mode="md" *ngFor="let alternative of question.alternatives; index as alternativeId">
+            <ion-radio slot="start" class="ion-margin-end" [value]="alternative.type || alternativeId"></ion-radio>
+            <ion-label class="ion-text-wrap">{{ alternative.text }}</ion-label>
           </ion-item>
-        </form>
-      </ng-container>
+        </ion-radio-group>
+      </form>
     </ion-slide>
   </ion-slides>
 
@@ -137,11 +125,24 @@
     </div>
   </div>
 
+  <ion-fab vertical="bottom" horizontal="start" slot="fixed" *ngIf="!isBeginning && !showSuccess">
+    <ion-fab-button color="dark" (click)="prev()">
+      <ion-icon name="caret-back"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="!isBeginning && !isEnd && !showSuccess">
+    <ion-fab-button color="dark" (click)="next()">
+      <ion-icon name="caret-forward"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
 </ion-content>
 
-<ion-footer>
+<ion-footer *ngIf="activeIndex === assessment?._instructions.length - 1 || isEnd || showSuccess">
   <ion-button type="button" expand="block" color="dark" *ngIf="!showSuccess" (click)="next()">
-    {{ activeIndex == assessment?._instructions.length - 1 ? 'Iniciar o Assessment' : ( isEnd ? 'Finalizar' : 'Avançar') }}
+    <span *ngIf="isEnd">Finalizar</span>
+    <span *ngIf="activeIndex === assessment?._instructions.length - 1">Iniciar o Assessment</span>
   </ion-button>
 
   <ion-button type="button" expand="block" color="dark" *ngIf="showSuccess" (click)="goToBack()">

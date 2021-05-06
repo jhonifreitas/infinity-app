@@ -1,4 +1,5 @@
 import { Base } from './base';
+import { Question } from './assessment';
 
 export class Application extends Base {
   init: Date;
@@ -20,10 +21,9 @@ export class Application extends Base {
 
 export class Answer {
   datetime: Date;
-  questionId: string;
+  question: Question;
 
-  text?: string;
-  alternativeId?: string;
+  alternative?: string;
   neuro: {
     intensity: number;
     satisfaction: number;

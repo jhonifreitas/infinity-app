@@ -107,7 +107,7 @@ export class AssessmentFormPage implements OnInit {
     this.assessment._questions = this.randomPipe.transform(this.assessment._questions);
   }
 
-  getFormGroup(type: 'neuro' | 'objective' | 'dissertation') {
+  getFormGroup(type: 'neuro' | 'profile' | 'objective') {
     if (type === 'neuro')
       return this.formBuilder.group({
         questionId: ['', Validators.required],
@@ -116,15 +116,10 @@ export class AssessmentFormPage implements OnInit {
           satisfaction: ['', Validators.required]
         })
       });
-    else if (type === 'objective')
-      return this.formBuilder.group({
-        questionId: ['', Validators.required],
-        alternativeId: ['', Validators.required]
-      });
     else
       return this.formBuilder.group({
         questionId: ['', Validators.required],
-        text: ['', Validators.required]
+        alternative: ['', Validators.required]
       });
   }
 
@@ -150,7 +145,7 @@ export class AssessmentFormPage implements OnInit {
           this.data = app;
 
           this.assessment._questions.forEach(question => {
-            if (app.answers.find(answer => answer.questionId === question.id)) dones.push(question);
+            if (app.answers.find(answer => answer.question.id === question.id)) dones.push(question);
             else notDones.push(question);
           });
 
@@ -160,7 +155,7 @@ export class AssessmentFormPage implements OnInit {
           this.isEnd = await this.ionSlides.isEnd();
           this.isBeginning = await this.ionSlides.isBeginning();
           this.updatePercent();
-        }
+        } else if (!app.end) await this._application.delete(app.id, true);
       }).catch(_ => this.goToBack());
     }
   }
@@ -172,6 +167,10 @@ export class AssessmentFormPage implements OnInit {
       this.showingQuestion = true;
       const question = this.assessment._questions[index];
       this.formGroup = this.getFormGroup(question.type);
+
+      const answer = this.data.answers.find(ans => ans.question.id === question.id);
+      if (answer) this.formGroup.patchValue(answer);
+
       this.controls.questionId.setValue(question.id);
     } else {
       this.formGroup = null;
@@ -225,9 +224,15 @@ export class AssessmentFormPage implements OnInit {
 
   async onSubmit() {
     if (this.formGroup.valid) {
-      const answer = Object.assign(new Answer(), this.formGroup.value) as Answer;
+      const value = this.formGroup.value;
+      value.question = this.assessment._questions.find(question => question.id === value.questionId);
+      delete value.questionId;
+      const answer = Object.assign(new Answer(), value) as Answer;
 
-      this.data.answers.push(answer);
+      const index = this.data.answers.findIndex(ans => ans.question.id === value.question.id);
+      if (index >= 0) this.data.answers[index] = answer;
+      else this.data.answers.push(answer);
+
       await this._application.update(this.data.id, this.data).then(_ => {
         if (this.isEnd) this.showSuccess = true;
         this.updatePercent();
@@ -236,6 +241,10 @@ export class AssessmentFormPage implements OnInit {
   }
 
   goToBack() {
-    this.navCtrl.back();
+    if (this.data.id && !this.data.end) {
+      this._util.alertConfirm('Atenção!', 'Deseja mesmo sair?', 'Sim', 'Não')
+        .then(_ => this.navCtrl.back())
+        .catch(_ => {});
+    } else this.navCtrl.back();
   }
 }
