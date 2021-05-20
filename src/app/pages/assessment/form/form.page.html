@@ -176,17 +176,22 @@
 
         <h3>Seu {{ assessment.name }} é:</h3>
 
-        <h2>
-          <span *ngIf="resultProfile.type == 'lion'">Leão</span>
-          <span *ngIf="resultProfile.type == 'dog'">Cachorro</span>
-          <span *ngIf="resultProfile.type == 'monkey'">Macaco</span>
-          <span *ngIf="resultProfile.type == 'peacock'">Pavão</span>
-        </h2>
-
-        <h3 *ngIf="resultProfile === 'dog'">Dominante, Rápido para agir e racional</h3>
-        <h3 *ngIf="resultProfile === 'lion'">Dominante, Rápido para agir e racional</h3>
-        <h3 *ngIf="resultProfile === 'monkey'">Dominante, Rápido para agir e racional</h3>
-        <h3 *ngIf="resultProfile === 'peacock'">Dominante, Rápido para agir e racional</h3>
+        <ng-container *ngIf="resultProfile.type === 'dog'">
+          <h2>Cachorro</h2>
+          <h3>Dominante, Rápido para agir e racional</h3>
+        </ng-container>
+        <ng-container *ngIf="resultProfile.type === 'lion'">
+          <h2>Leão</h2>
+          <h3>Dominante, Rápido para agir e racional</h3>
+        </ng-container>
+        <ng-container *ngIf="resultProfile.type === 'monkey'">
+          <h2>Macaco</h2>
+          <h3>Dominante, Rápido para agir e racional</h3>
+        </ng-container>
+        <ng-container *ngIf="resultProfile.type === 'peacock'">
+          <h2>Pavão</h2>
+          <h3>Dominante, Rápido para agir e racional</h3>
+        </ng-container>
       </ng-container>
     </div>
   </div>
