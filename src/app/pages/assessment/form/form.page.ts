@@ -45,11 +45,11 @@ export class AssessmentFormPage implements OnInit {
 
   timer: Duration;
   resultProfile: {
-    lion: number,
-    dog: number,
-    monkey: number,
-    peacock: number,
-    type: 'dog' | 'lion' | 'monkey' | 'peacock'
+    lion: number;
+    dog: number;
+    monkey: number;
+    peacock: number;
+    type: 'dog' | 'lion' | 'monkey' | 'peacock';
   };
 
   constructor(
@@ -236,30 +236,31 @@ export class AssessmentFormPage implements OnInit {
     });
   }
 
-  private getResultProfile() {
+  getResultProfile() {
     let dog = 0;
     let lion = 0;
     let monkey = 0;
     let peacock = 0;
-    for (const answer of this.data.answers) {
+    const total = this.data.answers.length;
+    let type: 'dog' | 'lion' | 'monkey' | 'peacock' = 'monkey';
+
+    for (const answer of this.data.answers)
       if (answer.alternative === 'dog') dog += 1;
       else if (answer.alternative === 'lion') lion += 1;
       else if (answer.alternative === 'monkey') monkey += 1;
       else if (answer.alternative === 'peacock') peacock += 1;
-    }
-    const total = this.data.answers.length;
-    let type: 'dog' | 'lion' | 'monkey' | 'peacock' = 'monkey';
+
     if (dog > lion && dog > monkey && dog > peacock) type = 'dog';
     else if (lion > monkey && lion > dog && lion > peacock) type = 'lion';
     else if (peacock > monkey && lion > dog && peacock > lion) type = 'peacock';
 
     this.resultProfile = {
-      type, 
+      type,
       dog: (dog / total) * 100,
       lion: (lion / total) * 100,
       monkey: (monkey / total) * 100,
-      peacock: (peacock / total) * 100,
-    }
+      peacock: (peacock / total) * 100
+    };
   }
 
   async onSubmit() {
