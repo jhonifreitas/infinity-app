@@ -27,18 +27,29 @@ export class AssessmentFormPage implements OnInit {
   @ViewChild('slides') ionSlides: IonSlides;
 
   isEnd = false;
-  percentage = 0;
-  activeIndex = 0;
-  timer: Duration;
   isBeginning = true;
+  showProfile = false;
   showSuccess = false;
-  formGroup: FormGroup;
-  assessment: Assessment;
   showingQuestion = false;
-  data = new Application();
+
   slideOpts = {
     autoHeight: true,
     allowTouchMove: false
+  };
+
+  percentage = 0;
+  activeIndex = 0;
+  formGroup: FormGroup;
+  assessment: Assessment;
+  data = new Application();
+
+  timer: Duration;
+  resultProfile: {
+    lion: number,
+    dog: number,
+    monkey: number,
+    peacock: number,
+    type: 'dog' | 'lion' | 'monkey' | 'peacock'
   };
 
   constructor(
@@ -225,6 +236,32 @@ export class AssessmentFormPage implements OnInit {
     });
   }
 
+  private getResultProfile() {
+    let dog = 0;
+    let lion = 0;
+    let monkey = 0;
+    let peacock = 0;
+    for (const answer of this.data.answers) {
+      if (answer.alternative === 'dog') dog += 1;
+      else if (answer.alternative === 'lion') lion += 1;
+      else if (answer.alternative === 'monkey') monkey += 1;
+      else if (answer.alternative === 'peacock') peacock += 1;
+    }
+    const total = this.data.answers.length;
+    let type: 'dog' | 'lion' | 'monkey' | 'peacock' = 'monkey';
+    if (dog > lion && dog > monkey && dog > peacock) type = 'dog';
+    else if (lion > monkey && lion > dog && lion > peacock) type = 'lion';
+    else if (peacock > monkey && lion > dog && peacock > lion) type = 'peacock';
+
+    this.resultProfile = {
+      type, 
+      dog: (dog / total) * 100,
+      lion: (lion / total) * 100,
+      monkey: (monkey / total) * 100,
+      peacock: (peacock / total) * 100,
+    }
+  }
+
   async onSubmit() {
     if (this.formGroup.valid) {
       const value = this.formGroup.value;
@@ -239,6 +276,9 @@ export class AssessmentFormPage implements OnInit {
       await this._application.update(this.data.id, this.data).then(_ => {
         if (this.isEnd) {
           this.timer = intervalToDuration({start: this.data.init, end: this.data.end});
+
+          if (this.assessment.type === 'profile') this.getResultProfile();
+
           this.showSuccess = true;
         }
         this.updatePercent();

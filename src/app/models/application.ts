@@ -4,8 +4,8 @@ import { Question } from './assessment';
 export class Application extends Base {
   init: Date;
   end?: Date;
-  student: Student;
   answers: Answer[];
+  student: ApplicationStudent;
 
   mba?: MBA;
   course?: Course;
@@ -15,7 +15,7 @@ export class Application extends Base {
     super();
     this.answers = [];
     this.init = new Date();
-    this.student = new Student();
+    this.student = new ApplicationStudent();
   }
 }
 
@@ -34,7 +34,7 @@ export class Answer {
   }
 }
 
-class Student {
+class ApplicationStudent {
   id: string;
   name: string;
 }

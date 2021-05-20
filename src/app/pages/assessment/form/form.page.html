@@ -120,20 +120,74 @@
 
   <div id="vertical-align" *ngIf="showSuccess">
     <div class="container ion-text-center">
-      <h2>Obrigado por suas respostas</h2>
-      <h2>Seu tempo de conclusão</h2>
+      <ng-container *ngIf="!showProfile">
+        <h2>Obrigado por suas respostas</h2>
 
-      <ion-row>
-        <ion-col size="3" *ngIf="timer.hours">
-          <circle-progress [title]="timer.hours.toString()" subtitle="horas" [percent]="timer.hours / 0.6"></circle-progress>
-        </ion-col>
-        <ion-col [size]="timer.hours ? 3 : 6" *ngIf="timer.minutes">
-          <circle-progress [title]="timer.minutes.toString()" subtitle="minutos" [percent]="timer.minutes / 0.6"></circle-progress>
-        </ion-col>
-        <ion-col [size]="timer.hours ? 3 : (timer.minutes ? 6 : 12)">
-          <circle-progress [title]="timer.seconds.toString()" subtitle="segundos" [percent]="timer.seconds / 0.6"></circle-progress>
-        </ion-col>
-      </ion-row>
+        <ion-row>
+          <ion-col size="4" *ngIf="timer.hours">
+            <circle-progress [title]="timer.hours.toString()" subtitle="horas" [percent]="timer.hours / 0.6"></circle-progress>
+          </ion-col>
+          <ion-col [size]="timer.hours ? 4 : 6" *ngIf="timer.minutes">
+            <circle-progress [title]="timer.minutes.toString()" subtitle="minutos" [percent]="timer.minutes / 0.6"></circle-progress>
+          </ion-col>
+          <ion-col [size]="timer.hours ? 4 : (timer.minutes ? 6 : 12)">
+            <circle-progress [title]="timer.seconds.toString()" subtitle="segundos" [percent]="timer.seconds / 0.6"></circle-progress>
+          </ion-col>
+        </ion-row>
+
+        <h2>Seu tempo de conclusão</h2>
+      </ng-container>
+      
+      <ng-container *ngIf="showProfile">
+        <ion-grid id="resultProfile" class="ion-no-padding">
+          <ion-row>
+            <ion-col size="6">
+              <div class="animal" [class.active]="resultProfile.type === 'peacock'">
+                <img src="assets/animals/peacock.png" alt="">
+                <span class="percent">{{ resultProfile.peacock }}%</span>
+                <span class="name">Pavão</span>
+              </div>
+            </ion-col>
+            <ion-col size="6">
+              <div class="animal" [class.active]="resultProfile.type === 'lion'">
+                <img src="assets/animals/lion.png" alt="">
+                <span class="percent">{{ resultProfile.lion }}%</span>
+                <span class="name">Leão</span>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="6">
+              <div class="animal" [class.active]="resultProfile.type === 'dog'">
+                <img src="assets/animals/dog.png" alt="">
+                <span class="percent">{{ resultProfile.dog }}%</span>
+                <span class="name">Cachorro</span>
+              </div>
+            </ion-col>
+            <ion-col size="6">
+              <div class="animal" [class.active]="resultProfile.type === 'monkey'">
+                <img src="assets/animals/monkey.png" alt="">
+                <span class="percent">{{ resultProfile.monkey }}%</span>
+                <span class="name">Macaco</span>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <h3>Seu {{ assessment.name }} é:</h3>
+
+        <h2>
+          <span *ngIf="resultProfile.type == 'lion'">Leão</span>
+          <span *ngIf="resultProfile.type == 'dog'">Cachorro</span>
+          <span *ngIf="resultProfile.type == 'monkey'">Macaco</span>
+          <span *ngIf="resultProfile.type == 'peacock'">Pavão</span>
+        </h2>
+
+        <h3 *ngIf="resultProfile === 'dog'">Dominante, Rápido para agir e racional</h3>
+        <h3 *ngIf="resultProfile === 'lion'">Dominante, Rápido para agir e racional</h3>
+        <h3 *ngIf="resultProfile === 'monkey'">Dominante, Rápido para agir e racional</h3>
+        <h3 *ngIf="resultProfile === 'peacock'">Dominante, Rápido para agir e racional</h3>
+      </ng-container>
     </div>
   </div>
 
@@ -151,13 +205,21 @@
 
 </ion-content>
 
-<ion-footer *ngIf="activeIndex === assessment?._instructions.length - 1 || isEnd || showSuccess">
-  <ion-button type="button" expand="block" color="dark" *ngIf="!showSuccess" (click)="next()">
-    <span *ngIf="isEnd">Finalizar</span>
-    <span *ngIf="activeIndex === assessment?._instructions.length - 1">Iniciar o Assessment</span>
-  </ion-button>
+<ng-container *ngIf="assessment">
+  <ion-footer *ngIf="activeIndex === assessment._instructions.length - 1 || isEnd || showSuccess">
+    <ion-button type="button" expand="block" color="dark" *ngIf="!showSuccess" (click)="next()">
+      <span *ngIf="isEnd">Finalizar</span>
+      <span *ngIf="activeIndex === assessment._instructions.length - 1">Iniciar o Assessment</span>
+    </ion-button>
 
-  <ion-button type="button" expand="block" color="dark" *ngIf="showSuccess" (click)="goToBack()">
-    Sair
-  </ion-button>
-</ion-footer>
+    <ion-button type="button" expand="block" color="dark" (click)="goToBack()"
+      *ngIf="showSuccess && (assessment.type !== 'profile' || showProfile)">
+      Sair
+    </ion-button>
+
+    <ion-button type="button" expand="block" color="dark" (click)="showProfile = true"
+      *ngIf="showSuccess && (assessment.type === 'profile' && !showProfile)">
+      Ver Perfil
+    </ion-button>
+  </ion-footer>
+</ng-container>

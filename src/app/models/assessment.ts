@@ -5,6 +5,7 @@ export class Assessment extends Base {
   duration: number;
   groups: string[];
   instructions: string[];
+  type: 'neuro' | 'profile' | 'objective';
 
   _groups?: Group[];
   _questions?: Question[];
@@ -43,19 +44,12 @@ export class Question extends Base {
   title: string;
   text: string;
   point?: number;
-  type: 'neuro' | 'profile' | 'objective';
+  result?: string;
   alternatives?: Alternative[];
+  type: 'neuro' | 'profile' | 'objective';
 
   constructor() {
     super();
-  }
-
-  static get getTypes() {
-    return [
-      {id: 'neuro', name: 'Neuro'},
-      {id: 'profile', name: 'Perfil'},
-      {id: 'objective', name: 'Objetivo'}
-    ];
   }
 }
 
@@ -63,13 +57,4 @@ export class Alternative {
   text: string;
   type?: string;
   isCorrect?: boolean;
-
-  static get getProfileTypes() {
-    return [
-      {id: 'dog', name: 'Cachorro'},
-      {id: 'lion', name: 'Leão'},
-      {id: 'monkey', name: 'Macaco'},
-      {id: 'peacock', name: 'Pavão'}
-    ];
-  }
 }
