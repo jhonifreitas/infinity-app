@@ -38,6 +38,6 @@ export class ApplicationService extends FirebaseAbstract<Application> {
       new FirebaseWhere('assessment.id', '==', id),
       new FirebaseWhere('student.id', '==', this._storage.getUser.id)
     ];
-    return this.getWhereMany(where);
+    return this.getWhereMany(where, null, null, 1).then(docs => docs.length ? docs[0] : Promise.reject());
   }
 }

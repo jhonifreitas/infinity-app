@@ -29,9 +29,7 @@ ion-button {text-transform: none;}
 ion-list {background: transparent !important;}
 ion-alert, ion-picker, ion-modal, ion-loading, ion-menu {backdrop-filter: blur(7px);}
 
-body {
-  &.dark img.dark, img.light  {display: none;}
-}
+img.dark {display: none;}
 
 #vertical-align {
   height: 100%;
@@ -65,6 +63,16 @@ ion-button {
   --padding-bottom: 1.1rem;
 }
 
+ion-alert {
+  .alert-radio-group .alert-radio-label {
+    white-space: pre-wrap;
+  }
+}
+
 @media (max-width: 991px) {
   #list-empty {min-height: 100%;}
+}
+@media (prefers-color-scheme: dark) {
+  img.dark {display: initial;}
+  img.light {display: none;}
 }

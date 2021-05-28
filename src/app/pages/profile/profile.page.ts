@@ -7,11 +7,21 @@ import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 
 import { Student } from 'src/app/models/student';
+import { City } from 'src/app/models/default/city';
+import { State } from 'src/app/models/default/state';
+import { Genre } from 'src/app/models/default/genre';
+import { CivilStatus } from 'src/app/models/default/civil-status';
+import { Branch, Company, Department, Post } from 'src/app/models/company';
 
 import { UtilService } from 'src/app/services/util.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { AuthService } from 'src/app/services/firebase/auth.service';
+import { ValidatorService } from 'src/app/services/validator.service';
 import { StudentService } from 'src/app/services/firebase/student.service';
+import { CompanyService } from 'src/app/services/firebase/company/company.service';
+import { CompanyPostService } from 'src/app/services/firebase/company/post.service';
+import { CompanyBranchService } from 'src/app/services/firebase/company/branch.service';
+import { CompanyDepartmentService } from 'src/app/services/firebase/company/department.service';
 
 @Component({
   selector: 'app-profile',
@@ -21,8 +31,27 @@ import { StudentService } from 'src/app/services/firebase/student.service';
 export class ProfilePage implements OnInit {
 
   data: Student;
+  genres = Genre.all;
   isCordova: boolean;
   formGroup: FormGroup;
+  imageRequired = false;
+  socialRequired = false;
+  civilStatus = CivilStatus.all;
+  currentDate = new Date().toISOString();
+  scholarities = Student.getScholarities;
+  segment: 'default' | 'address' | 'company' | 'course' | 'social' = 'default';
+
+  birthStates = State.all;
+  courseStates = State.all;
+  addressStates = State.all;
+  birthCities: City[] = [];
+  courseCities: City[] = [];
+  addressCities: City[] = [];
+
+  posts: Post[] = [];
+  branches: Branch[] = [];
+  companies: Company[] = [];
+  departments: Department[] = [];
 
   private camOptions: CameraOptions = {
     quality: 90,
@@ -42,7 +71,12 @@ export class ProfilePage implements OnInit {
     private _student: StudentService,
     private _storage: StorageService,
     private formBuilder: FormBuilder,
+    private _company: CompanyService,
+    private _post: CompanyPostService,
+    private _validator: ValidatorService,
+    private _branch: CompanyBranchService,
     private activatedRoute: ActivatedRoute,
+    private _department: CompanyDepartmentService,
     private actionSheetCtrl: ActionSheetController
   ) {
     this.isCordova = this.platform.is('cordova');
@@ -50,12 +84,60 @@ export class ProfilePage implements OnInit {
       name: ['', [Validators.required, this.validatorName]],
       phone: ['', [Validators.required, Validators.minLength(14)]],
       email: ['', [Validators.required, Validators.email]],
+      genre: [''],
+      dateBirth: [''],
+      childrens: [''],
+      stateBirth: [''],
+      scholarity: [''],
+      civilStatus: [''],
+      cityBirth: [{value: '', disabled: true}],
+
+      cpf: ['', this._validator.validatorCPF],
+      rg: [''],
+      rgEmitter: [''],
+
+      motherName: [''],
+      spouseName: [''],
+
+      address: this.formBuilder.group({
+        street: ['', Validators.required],
+        number: ['', Validators.required],
+        district: ['', Validators.required],
+        city: [{value: '', disabled: true}, Validators.required],
+        state: ['', Validators.required],
+        zipcode: ['', Validators.required],
+        complement: [''],
+      }),
+
+      company: this.formBuilder.group({
+        companyId: ['', Validators.required],
+        branchId: [{value: '', disabled: true}, Validators.required],
+        departmentId: [{value: '', disabled: true}, Validators.required],
+        postId: [{value: '', disabled: true}, Validators.required],
+      }),
+
+      course: this.formBuilder.group({
+        name: ['', Validators.required],
+        institute: ['', Validators.required],
+        city: [{value: '', disabled: true}, Validators.required],
+        state: ['', Validators.required],
+        conclusion: [''],
+      }),
+
+      social: this.formBuilder.group({
+        linkedin: [''],
+        facebook: [''],
+        instagram: [''],
+      }),
     });
   }
 
   async ngOnInit() {
     const loader = await this._util.loading();
-    this.setData();
+    await this.getCompanies();
+    const requireds = this.activatedRoute.snapshot.paramMap.get('requireds');
+    if (requireds) this.setValidators(requireds.split(','));
+    await this.setData();
     loader.dismiss();
   }
 
@@ -63,9 +145,86 @@ export class ProfilePage implements OnInit {
     return this.formGroup.controls;
   }
 
-  setData() {
+  get addressControls() {
+    return (this.controls.address as FormGroup).controls;
+  }
+
+  get companyControls() {
+    return (this.controls.company as FormGroup).controls;
+  }
+
+  get courseControls() {
+    return (this.controls.course as FormGroup).controls;
+  }
+
+  get socialControls() {
+    return (this.controls.social as FormGroup).controls;
+  }
+
+  async getCompanies() {
+    this.companies = await this._company.getAllActive();
+  }
+
+  async setData() {
     this.data = this._storage.getUser;
     this.formGroup.patchValue(this.data);
+
+    if (this.data.stateBirth) {
+      this.birthStateChange();
+      setTimeout(() => this.controls.cityBirth.setValue(this.data.cityBirth));
+    }
+    if (this.data.course && this.data.course.state) this.courseStateChange(false);
+    if (this.data.address && this.data.address.state) this.addressStateChange(false);
+
+    if (this.data.company && this.data.company.companyId) await this.companyChange(false);
+    if (this.data.company && this.data.company.branchId) await this.branchChange(false);
+    if (this.data.company && this.data.company.departmentId) await this.departmentChange(false);
+  }
+
+  setValidators(requireds: string[]) {
+    this.formGroup.clearValidators();
+    for (const required of requireds) {
+      this.imageRequired = required === 'image';
+      this.socialRequired = required === 'social';
+      if (required === 'genre') this.controls.genre.setValidators(Validators.required);
+      if (required === 'childrens') this.controls.childrens.setValidators(Validators.required);
+      if (required === 'cpf') this.controls.cpf.setValidators(Validators.required);
+      if (required === 'scholarity') this.controls.scholarity.setValidators(Validators.required);
+      if (required === 'civilStatus') this.controls.civilStatus.setValidators(Validators.required);
+      if (required === 'dateBirth') this.controls.dateBirth.setValidators(Validators.required);
+      if (required === 'motherName') this.controls.motherName.setValidators(Validators.required);
+      if (required === 'spouseName') this.controls.spouseName.setValidators(Validators.required);
+      if (required === 'rg') {
+        this.controls.rg.setValidators(Validators.required);
+        this.controls.rgEmitter.setValidators(Validators.required);
+      }
+      if (required === 'placeBirth') {
+        this.controls.stateBirth.setValidators(Validators.required);
+        this.controls.cityBirth.setValidators(Validators.required);
+      }
+      if (required === 'address') {
+        this.addressControls.street.setValidators(Validators.required);
+        this.addressControls.number.setValidators(Validators.required);
+        this.addressControls.district.setValidators(Validators.required);
+        this.addressControls.city.setValidators(Validators.required);
+        this.addressControls.state.setValidators(Validators.required);
+        this.addressControls.zipcode.setValidators(Validators.required);
+      }
+      if (required === 'course') {
+        this.courseControls.name.setValidators(Validators.required);
+        this.courseControls.institute.setValidators(Validators.required);
+        this.courseControls.city.setValidators(Validators.required);
+        this.courseControls.state.setValidators(Validators.required);
+      }
+      if (required === 'company') {
+        this.companyControls.companyId.setValidators(Validators.required);
+        this.companyControls.branchId.setValidators(Validators.required);
+        this.companyControls.departmentId.setValidators(Validators.required);
+        this.companyControls.postId.setValidators(Validators.required);
+      }
+    }
+    this.formGroup.markAllAsTouched();
+    this.formGroup.updateValueAndValidity();
   }
 
   validatorName(control: AbstractControl) {
@@ -74,6 +233,58 @@ export class ProfilePage implements OnInit {
     const nameList = value.split(' ');
     if (nameList.length < 2 || !nameList[1]) error = {invalid: true};
     return error;
+  }
+
+  birthStateChange(reset = true) {
+    if (reset) this.controls.cityBirth.reset();
+    this.birthCities = new City().getByState(this.controls.stateBirth.value);
+    if (this.birthCities.length) this.controls.cityBirth.enable();
+    else this.controls.cityBirth.disable();
+  }
+
+  addressStateChange(reset = true) {
+    if (reset) this.addressControls.city.reset();
+    this.addressCities = new City().getByState(this.addressControls.state.value);
+    if (this.addressCities.length) this.addressControls.city.enable();
+    else this.addressControls.city.disable();
+  }
+
+  courseStateChange(reset = true) {
+    if (reset) this.courseControls.city.reset();
+    this.courseCities = new City().getByState(this.courseControls.state.value);
+    if (this.courseCities.length) this.courseControls.city.enable();
+    else this.courseControls.city.disable();
+  }
+
+  async companyChange(reset = true) {
+    if (reset) {
+      this.companyControls.branchId.reset();
+      this.companyControls.departmentId.reset();
+      this.companyControls.postId.reset();
+    }
+    const companyId = this.companyControls.companyId.value;
+    this.branches = await this._branch.getWhere('companyId', '==', companyId);
+    if (this.branches.length) this.companyControls.branchId.enable();
+    else this.companyControls.branchId.disable();
+  }
+
+  async branchChange(reset = true) {
+    if (reset) {
+      this.companyControls.departmentId.reset();
+      this.companyControls.postId.reset();
+    }
+    const branchId = this.companyControls.branchId.value;
+    this.departments = await this._department.getWhere('branchId', '==', branchId);
+    if (this.departments.length) this.companyControls.departmentId.enable();
+    else this.companyControls.departmentId.disable();
+  }
+
+  async departmentChange(reset = true) {
+    if (reset) this.companyControls.postId.reset();
+    const departmentId = this.companyControls.departmentId.value;
+    this.posts = await this._post.getWhere('departmentId', '==', departmentId);
+    if (this.posts.length) this.companyControls.postId.enable();
+    else this.companyControls.postId.disable();
   }
 
   async choiceMedia() {
@@ -136,9 +347,14 @@ export class ProfilePage implements OnInit {
   }
 
   async onSubmit() {
-    if (this.formGroup.valid) {
+    const values = this.formGroup.value;
+    if (this.socialRequired && (!values.social.facebook && !values.social.instagram && !values.social.linkedin)) {
+      this.segment = 'social';
+      this._util.message('Preencha ao menos uma das redes sociais!');
+    } else if (this.imageRequired && !this.data.image) this._util.message('Foto de perfil é obrigatório!');
+    else if (this.formGroup.valid) {
       const loader = await this._util.loading('Criando...');
-      Object.assign(this.data, this.formGroup.value);
+      Object.assign(this.data, values);
 
       await this._student.update(this.data.id, this.data).then(_ => {
         this.goToNext();

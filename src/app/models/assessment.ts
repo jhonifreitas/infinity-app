@@ -5,6 +5,7 @@ export class Assessment extends Base {
   duration: number;
   groups: string[];
   instructions: string[];
+  studentRequireds: string[];
   type: 'neuro' | 'profile' | 'objective';
 
   _groups?: Group[];
@@ -15,6 +16,7 @@ export class Assessment extends Base {
     super();
     this.groups = [];
     this.instructions = [];
+    this.studentRequireds = [];
   }
 }
 

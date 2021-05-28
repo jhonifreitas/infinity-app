@@ -139,16 +139,14 @@ export class AssessmentFormPage implements OnInit {
 
   async checkStarted() {
     const id = this.activatedRoute.snapshot.paramMap.get('id');
-    const apps = await this._application.getByAssessmentId(id);
+    const app = await this._application.getByAssessmentId(id).catch(_ => {});
 
-    const app = apps.find(application => !application.end) || apps.find(application => application.end);
-
-    if (app) {
+    if (app && !app.end) {
       const end = new Date(app.init);
       end.setHours(end.getHours() + this.assessment.duration);
-      const inProgress = !app.end && new Date() < end;
+      const inProgress = new Date() < end;
 
-      let message = 'Você já realizou esse Assessment.<br><br>Deseja fazer novamente?';
+      let message = 'Infelizmente o tempo máximo para realizar esse Assessment expirou.<br><br>Deseja fazer novamente?';
       if (inProgress) message = 'Você ainda não terminou esse Assessment.<br><br>Deseja continuar?';
 
       this._util.alertConfirm('Atenção!', message, 'sim', 'não').then(async _ => {
@@ -169,7 +167,7 @@ export class AssessmentFormPage implements OnInit {
           this.isEnd = await this.ionSlides.isEnd();
           this.isBeginning = await this.ionSlides.isBeginning();
           this.updatePercent();
-        } else if (!app.end) await this._application.delete(app.id, true);
+        } else await this._application.delete(app.id, true);
       }).catch(_ => this.goToBack());
     }
   }

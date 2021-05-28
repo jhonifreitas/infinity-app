@@ -19,12 +19,10 @@ export class SubscriptionService extends FirebaseAbstract<Subscription> {
     super(db, SubscriptionService.collectionName);
   }
 
-  async getByStudentId(whereColumn: string, id: string): Promise<Subscription> {
+  async getByStudentId(): Promise<Subscription> {
     const studentId = this._storage.getUser.id;
-    const where = [
-      new FirebaseWhere(whereColumn, '==', id),
-      new FirebaseWhere('student.id', '==', studentId)
-    ];
-    return this.getWhereMany(where).then(res => res.length ? res[0] : Promise.reject('Not found!'));
+    return this.getWhere(
+      'student.id', '==', studentId, 'createdAt', 'desc', 1
+    ).then(res => res.length ? res[0] : Promise.reject('Not found!'));
   }
 }

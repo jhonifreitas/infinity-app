@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 import { AuthGuard } from './guards/auth.guard';
-import { SubscriptionGuard } from './guards/subscription.guard';
+import { ProfileGuard } from './guards/profile.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: '/tabs/assessment', pathMatch: 'full' },
@@ -17,7 +17,7 @@ const routes: Routes = [
     {
       path: 'assessment/:id',
       data: {assessment: true},
-      canActivate: [SubscriptionGuard],
+      canActivate: [ProfileGuard],
       loadChildren: () => import('./pages/assessment/form/form.module').then(m => m.AssessmentFormPageModule)
     },
   ]},

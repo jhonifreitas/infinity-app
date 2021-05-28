@@ -6,21 +6,15 @@ export class Access extends Base {
   used: number;
   validity: Date;
   quantity: number;
+  companyId?: string;
+  assessmentIds: string[];
 
-  mbas: string[];
-  courses: string[];
-  assessments: string[];
-
-  _mbas?: any[];
-  _courses?: any[];
   _assessments?: Assessment[];
 
   constructor() {
     super();
     this.used = 0;
-    this.mbas = [];
-    this.courses = [];
     this.quantity = 0;
-    this.assessments = [];
+    this.assessmentIds = [];
   }
 }

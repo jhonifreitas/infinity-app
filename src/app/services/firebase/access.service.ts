@@ -17,13 +17,12 @@ export class AccessService extends FirebaseAbstract<Access> {
     super(db, AccessService.collectionName);
   }
 
-  async getByCode(code: string, whereColumn: string, id: string) {
+  async getByCode(code: string) {
     const where = [
       new FirebaseWhere('code', '==', code),
-      new FirebaseWhere('validity', '>=', new Date()),
-      new FirebaseWhere(whereColumn, 'array-contains', id)
+      new FirebaseWhere('validity', '>=', new Date())
     ];
-    return this.getWhereMany(where).then(res => {
+    return this.getWhereMany(where, null, null, 1).then(res => {
       if (res.length) {
         const doc = res[0];
         if (doc.quantity > 0 && doc.used >= doc.quantity) return Promise.reject();

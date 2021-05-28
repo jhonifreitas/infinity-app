@@ -4,12 +4,15 @@ export class Subscription extends Base {
   access: Access;
   student: Student;
 
-  mbaId?: string;
-  courseId?: string;
-  assessmentId?: string;
+  mbaIds: string[];
+  courseIds: string[];
+  assessmentIds: string[];
 
   constructor() {
     super();
+    this.mbaIds = [];
+    this.courseIds = [];
+    this.assessmentIds = [];
     this.access = new Access();
     this.student = new Student();
   }

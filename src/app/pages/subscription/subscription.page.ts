@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavParams, PopoverController } from '@ionic/angular';
+import { PopoverController } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Subscription } from 'src/app/models/subscription';
@@ -25,7 +25,6 @@ export class SubscriptionPage implements OnInit {
 
   constructor(
     private _util: UtilService,
-    private navParams: NavParams,
     private _access: AccessService,
     private _storage: StorageService,
     private formBuilder: FormBuilder,
@@ -54,26 +53,19 @@ export class SubscriptionPage implements OnInit {
       const accessCode: string = this.formGroup.value.accessCode;
       const student = this._storage.getUser;
 
-      let whereColumn = 'assessments';
-      const id = this.navParams.get('assessmentId') || this.navParams.get('courseId') || this.navParams.get('mbaId');
-
-      if (this.navParams.get('courseId')) {
-        whereColumn = 'courses';
-        this.data.courseId = id;
-      } else if (this.navParams.get('mbaId')) {
-        whereColumn = 'mbas';
-        this.data.mbaId = id;
-      } else this.data.assessmentId = id;
-
-      this.data.access.code = accessCode;
       this.data.student.id = student.id;
       this.data.student.name = student.name;
 
-      await this._access.getByCode(accessCode, whereColumn, id).then(async access => {
-        this.data.access.id = access.id;
-        await this._subscription.add(this.data).then(_ => {
-          this.goToBack(true);
-        });
+      await this._access.getByCode(accessCode).then(async access => {
+        const subscription = await this._subscription.getByStudentId().catch(_ => {});
+        if (!subscription) {
+          this.data.access.id = access.id;
+          this.data.access.code = access.code;
+          this.data.assessmentIds = access.assessmentIds;
+          await this._subscription.add(this.data);
+          await this._access.update(access.id, {used: access.used++});
+          this.goToBack(access);
+        } else this._util.message('Código já utilizado!');
       }).catch(err => this._util.message(err));
       loader.dismiss();
     } else this._util.message('Preencha os dados corretamente antes de prosseguir!');
