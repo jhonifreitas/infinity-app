@@ -356,6 +356,8 @@ export class ProfilePage implements OnInit {
       const loader = await this._util.loading('Criando...');
       Object.assign(this.data, values);
 
+      if (values.dateBirth) this.data.dateBirth = new Date(values.dateBirth);
+
       await this._student.update(this.data.id, this.data).then(_ => {
         this.goToNext();
         this._util.message('Perfil salvo!');
