@@ -32,8 +32,8 @@ ion-alert, ion-picker, ion-modal, ion-loading, ion-menu {backdrop-filter: blur(7
 img.dark {display: none;}
 
 #vertical-align {
-  height: 100%;
   display: flex;
+  min-height: 100%;
   align-items: center;
   justify-content: center;
 }
