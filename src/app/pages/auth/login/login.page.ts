@@ -84,6 +84,10 @@ export class LoginPage implements OnInit {
     loader.dismiss();
   }
 
+  onToggleInputs() {
+    this.showAuth = !this.showAuth;
+  }
+
   async onSubmit() {
     if (this.formGroup.valid) {
       const value = this.formGroup.value;

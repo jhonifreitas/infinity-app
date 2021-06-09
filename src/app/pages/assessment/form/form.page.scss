@@ -3,8 +3,9 @@ ion-content {
     min-height: calc(100% - 4px);
    
     ion-slide {
-      padding: 1rem 2rem;
       display: block;
+      padding: 1rem 2rem;
+      text-align: initial;
 
       ion-item.question {
         --background: none;

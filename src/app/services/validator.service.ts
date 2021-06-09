@@ -39,15 +39,25 @@ export class ValidatorService {
     return valid;
   }
 
-  static cleanCPF(cpf: string): string {
-    return cpf.replace(/\./gi, '').replace('-', '');
-  }
-
   // CPF
-  validatorCPF(control: AbstractControl): ValidatorFn {
+  static validatorCPF(control: AbstractControl): ValidatorFn {
     const value = control.value;
     let result = null;
     if (value && !ValidatorService.checkCPF(ValidatorService.cleanCPF(value))) result = {invalid: true};
     return result;
+  }
+
+  static cleanCPF(cpf: string): string {
+    return cpf.replace(/\./gi, '').replace('-', '');
+  }
+
+  // PHONE
+  static cleanPhone(phone: string): string {
+    return phone.replace(' ', '').replace('(', '').replace(')', '').replace('-', '');
+  }
+
+  // ZIPCODE
+  static cleanZipCode(zipcode: string): string {
+    return zipcode.replace('-', '');
   }
 }

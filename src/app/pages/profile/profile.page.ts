@@ -92,7 +92,7 @@ export class ProfilePage implements OnInit {
       civilStatus: [''],
       cityBirth: [{value: '', disabled: true}],
 
-      cpf: ['', this._validator.validatorCPF],
+      cpf: ['', ValidatorService.validatorCPF],
       rg: [''],
       rgEmitter: [''],
 
@@ -357,6 +357,9 @@ export class ProfilePage implements OnInit {
       Object.assign(this.data, values);
 
       if (values.dateBirth) this.data.dateBirth = new Date(values.dateBirth);
+      if (values.cpf) this.data.cpf = ValidatorService.cleanCPF(this.data.cpf);
+      if (values.phone) this.data.phone = ValidatorService.cleanPhone(this.data.phone);
+      if (values.address.zipcode) this.data.address.zipcode = ValidatorService.cleanZipCode(this.data.address.zipcode);
 
       await this._student.update(this.data.id, this.data).then(_ => {
         this.goToNext();
