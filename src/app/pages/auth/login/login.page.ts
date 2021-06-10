@@ -1,6 +1,6 @@
 import { ActivatedRoute } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
 import { NavController, Platform } from '@ionic/angular';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Student } from 'src/app/models/student';
@@ -24,6 +24,7 @@ export class LoginPage implements OnInit {
   formGroup: FormGroup;
 
   constructor(
+    private ngZone: NgZone,
     private _auth: AuthService,
     private _util: UtilService,
     private platform: Platform,
@@ -85,7 +86,7 @@ export class LoginPage implements OnInit {
   }
 
   onToggleInputs() {
-    this.showAuth = !this.showAuth;
+    this.ngZone.run(_ => this.showAuth = !this.showAuth);
   }
 
   async onSubmit() {
