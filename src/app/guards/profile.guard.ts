@@ -84,7 +84,7 @@ export class ProfileGuard implements CanActivate {
           ) ||
           (required === 'company' && (
             !student.company || !student.company.companyId || !student.company.branchId ||
-            !student.company.departmentId || !student.company.postId)
+            !student.company.departmentId || !student.company.areaId || !student.company.postId)
           ) ||
           (required === 'social' && (
             !student.social || (!student.social.facebook && !student.social.instagram && !student.social.linkedin)))

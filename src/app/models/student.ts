@@ -1,6 +1,6 @@
 import { Base } from './base';
 import { differenceInYears } from 'date-fns';
-import { Company, Branch, Department, Post } from './company';
+import { Company, Branch, Department, Area, Post } from './company';
 
 export class Student extends Base {
   name: string;
@@ -106,9 +106,11 @@ export class StudentCompany {
   companyId: string;
   branchId: string;
   departmentId: string;
+  areaId: string;
   postId: string;
 
   _post?: Post;
+  _area?: Area;
   _branch?: Branch;
   _company?: Company;
   _department?: Department;

@@ -11,7 +11,7 @@ import { City } from 'src/app/models/default/city';
 import { State } from 'src/app/models/default/state';
 import { Genre } from 'src/app/models/default/genre';
 import { CivilStatus } from 'src/app/models/default/civil-status';
-import { Branch, Company, Department, Post } from 'src/app/models/company';
+import { Company, Branch, Department, Area, Post } from 'src/app/models/company';
 
 import { UtilService } from 'src/app/services/util.service';
 import { StorageService } from 'src/app/services/storage.service';
@@ -20,6 +20,7 @@ import { ValidatorService } from 'src/app/services/validator.service';
 import { StudentService } from 'src/app/services/firebase/student.service';
 import { CompanyService } from 'src/app/services/firebase/company/company.service';
 import { CompanyPostService } from 'src/app/services/firebase/company/post.service';
+import { CompanyAreaService } from 'src/app/services/firebase/company/area.service';
 import { CompanyBranchService } from 'src/app/services/firebase/company/branch.service';
 import { CompanyDepartmentService } from 'src/app/services/firebase/company/department.service';
 
@@ -49,6 +50,7 @@ export class ProfilePage implements OnInit {
   addressCities: City[] = [];
 
   posts: Post[] = [];
+  areas: Area[] = [];
   branches: Branch[] = [];
   companies: Company[] = [];
   departments: Department[] = [];
@@ -73,7 +75,7 @@ export class ProfilePage implements OnInit {
     private formBuilder: FormBuilder,
     private _company: CompanyService,
     private _post: CompanyPostService,
-    private _validator: ValidatorService,
+    private _area: CompanyAreaService,
     private _branch: CompanyBranchService,
     private activatedRoute: ActivatedRoute,
     private _department: CompanyDepartmentService,
@@ -113,6 +115,7 @@ export class ProfilePage implements OnInit {
         companyId: ['', Validators.required],
         branchId: [{value: '', disabled: true}, Validators.required],
         departmentId: [{value: '', disabled: true}, Validators.required],
+        areaId: [{value: '', disabled: true}, Validators.required],
         postId: [{value: '', disabled: true}, Validators.required],
       }),
 
@@ -179,6 +182,7 @@ export class ProfilePage implements OnInit {
     if (this.data.company && this.data.company.companyId) await this.companyChange(false);
     if (this.data.company && this.data.company.branchId) await this.branchChange(false);
     if (this.data.company && this.data.company.departmentId) await this.departmentChange(false);
+    if (this.data.company && this.data.company.areaId) await this.areaChange(false);
   }
 
   setValidators(requireds: string[]) {
@@ -220,6 +224,7 @@ export class ProfilePage implements OnInit {
         this.companyControls.companyId.setValidators(Validators.required);
         this.companyControls.branchId.setValidators(Validators.required);
         this.companyControls.departmentId.setValidators(Validators.required);
+        this.companyControls.areaId.setValidators(Validators.required);
         this.companyControls.postId.setValidators(Validators.required);
       }
     }
@@ -260,6 +265,7 @@ export class ProfilePage implements OnInit {
     if (reset) {
       this.companyControls.branchId.reset();
       this.companyControls.departmentId.reset();
+      this.companyControls.areaId.reset();
       this.companyControls.postId.reset();
     }
     const companyId = this.companyControls.companyId.value;
@@ -271,6 +277,7 @@ export class ProfilePage implements OnInit {
   async branchChange(reset = true) {
     if (reset) {
       this.companyControls.departmentId.reset();
+      this.companyControls.areaId.reset();
       this.companyControls.postId.reset();
     }
     const branchId = this.companyControls.branchId.value;
@@ -280,9 +287,20 @@ export class ProfilePage implements OnInit {
   }
 
   async departmentChange(reset = true) {
-    if (reset) this.companyControls.postId.reset();
+    if (reset) {
+      this.companyControls.areaId.reset();
+      this.companyControls.postId.reset();
+    }
     const departmentId = this.companyControls.departmentId.value;
-    this.posts = await this._post.getWhere('departmentId', '==', departmentId);
+    this.areas = await this._area.getWhere('departmentId', '==', departmentId);
+    if (this.areas.length) this.companyControls.areaId.enable();
+    else this.companyControls.areaId.disable();
+  }
+
+  async areaChange(reset = true) {
+    if (reset) this.companyControls.postId.reset();
+    const areaId = this.companyControls.areaId.value;
+    this.posts = await this._post.getWhere('areaId', '==', areaId);
     if (this.posts.length) this.companyControls.postId.enable();
     else this.companyControls.postId.disable();
   }

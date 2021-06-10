@@ -23,10 +23,17 @@ export class Department extends Base {
   _branch?: Branch;
 }
 
-export class Post extends Base {
+export class Area extends Base {
   name: string;
-  level: number;
   departmentId: string;
 
   _department?: Department;
+}
+
+export class Post extends Base {
+  name: string;
+  level: number;
+  areaId: string;
+
+  _area?: Area;
 }
