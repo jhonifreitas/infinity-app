@@ -8,6 +8,7 @@ import { Student } from 'src/app/models/student';
 import { UtilService } from 'src/app/services/util.service';
 import { AuthService } from 'src/app/services/firebase/auth.service';
 import { UserService } from 'src/app/services/firebase/user.service';
+import { ValidatorService } from 'src/app/services/validator.service';
 import { StudentService } from 'src/app/services/firebase/student.service';
 import { NotificationsService } from 'src/app/services/notification.services';
 
@@ -94,6 +95,8 @@ export class RegisterPage implements OnInit {
 
       const value = this.formGroup.value;
       const data: Student = Object.assign(new Student(), value);
+
+      data.phone = ValidatorService.cleanPhone(data.phone);
 
       await this._auth.register(data, value.password).then(async uid => {
         await this.updateToken(uid);
