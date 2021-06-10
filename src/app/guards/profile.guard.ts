@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { NavController } from '@ionic/angular';
-import { ActivatedRouteSnapshot, CanActivate } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot } from '@angular/router';
 
 import { UtilService } from '../services/util.service';
 import { StorageService } from '../services/storage.service';
@@ -25,7 +25,9 @@ export class ProfileGuard implements CanActivate {
     private _subscription: SubscriptionService
   ){ }
 
-  canActivate(route: ActivatedRouteSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+  canActivate(
+    route: ActivatedRouteSnapshot, state: RouterStateSnapshot
+  ): Observable<boolean> | Promise<boolean> | boolean {
     return new Promise(async resolve => {
       const loader = await this._util.loading('Verificando acesso ao conteúdo...');
       const id = route.paramMap.get('id');
@@ -39,7 +41,7 @@ export class ProfileGuard implements CanActivate {
             loader.dismiss();
             if (requireds.length) {
               this._util.message('Atualize seu perfil, preenchendo os campos em vermelho, antes de continuar!');
-              this.navCtrl.navigateForward(['/tabs/perfil', {requireds}]);
+              this.navCtrl.navigateForward(['/tabs/perfil', {requireds, returnUrl: state.url}]);
               return resolve(false);
             }
             return resolve(true);

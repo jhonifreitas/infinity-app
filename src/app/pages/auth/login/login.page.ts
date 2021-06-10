@@ -110,8 +110,4 @@ export class LoginPage implements OnInit {
     const url = this.activatedRoute.snapshot.paramMap.get('returnUrl') || '/';
     this.navCtrl.navigateRoot(url);
   }
-
-  goToBack() {
-    this.navCtrl.back();
-  }
 }
