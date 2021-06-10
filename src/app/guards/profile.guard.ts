@@ -74,7 +74,7 @@ export class ProfileGuard implements CanActivate {
           (required === 'motherName' && !student.motherName) ||
           (required === 'spouseName' && !student.spouseName) ||
           (required === 'address' && (
-            !student.address || student.address.city || !student.address.state || !student.address.street ||
+            !student.address || !student.address.city || !student.address.state || !student.address.street ||
             !student.address.number || !student.address.zipcode || !student.address.district)
           ) ||
           (required === 'placeBirth' && (!student.cityBirth || !student.stateBirth)) ||
