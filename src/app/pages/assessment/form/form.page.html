@@ -15,14 +15,20 @@
   <ion-slides #slides [scrollbar]="true" [options]="slideOpts" (ionSlideDidChange)="slideChanged()" *ngIf="!showSuccess">
     <ion-slide *ngFor="let instruction of assessment?._instructions">
 
-      <div [innerHtml]="instruction.text"></div>
+      <div class="ql-container">
+        <div class="ql-editor" [innerHTML]="instruction.text"></div>
+      </div>
 
     </ion-slide>
     <ion-slide *ngFor="let question of assessment?._questions; index as i">
 
       <ion-item lines="none" class="question">
         <ion-note slot="start">{{ i + 1 }}</ion-note>
-        <ion-label class="ion-text-wrap" [innerHtml]="question.text"></ion-label>
+        <ion-label class="ion-text-wrap">
+          <div class="ql-container">
+            <div class="ql-editor" [innerHTML]="question.text"></div>
+          </div>
+        </ion-label>
       </ion-item>
 
       <!-- NEURO -->
@@ -202,7 +208,7 @@
     </ion-fab-button>
   </ion-fab>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="!isBeginning && !isEnd && !showSuccess">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="activeIndex !== assessment?._instructions.length - 1 && !isEnd && !showSuccess">
     <ion-fab-button color="dark" (click)="next()">
       <ion-icon name="caret-forward"></ion-icon>
     </ion-fab-button>
