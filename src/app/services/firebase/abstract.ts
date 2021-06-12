@@ -5,6 +5,7 @@ import { AngularFirestore, CollectionReference } from '@angular/fire/firestore';
 
 import { Base } from '../../models/base';
 
+import { UtilService } from '../util.service';
 import { DocumentNotFoundError } from 'src/app/exceptions/document-not-found-error';
 
 export class FirebaseWhere {
@@ -239,27 +240,7 @@ export abstract class FirebaseAbstract<T extends Base> {
 
   protected toObject(doc: firebase.firestore.DocumentData): T {
     const data = { id: doc.id, ...doc.data() };
-    return FirebaseAbstract.transformTimestampToDate(data);
-  }
-
-  static transformTimestampToDate(obj: any): any {
-    if (null === obj || 'object' !== typeof obj) return obj;
-
-    if (obj instanceof firebase.firestore.Timestamp) return obj.toDate();
-
-    if (obj instanceof Array) {
-      const copy = [];
-      for (let i = 0, len = obj.length; i < len; i++) copy[i] = this.transformTimestampToDate(obj[i]);
-      return copy;
-    }
-
-    if (obj instanceof Object) {
-      const copy: any = {};
-      for (const attr in obj) if (obj.hasOwnProperty(attr)) copy[attr] = this.transformTimestampToDate(obj[attr]);
-      return copy;
-    }
-
-    throw new Error('The object could not be transformed! Type is not supported.');
+    return UtilService.transformTimestampToDate(data);
   }
 
   private cloneObject(obj: any): any {

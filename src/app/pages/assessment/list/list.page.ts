@@ -33,9 +33,8 @@ export class AssessmentListPage implements OnInit {
     if (!subscriptions.length) this.openSubscription();
 
     const loader = await this._util.loading('Liberando acesso...');
-    for (const subscription of subscriptions) {
+    for (const subscription of subscriptions)
       await this.getAssessments(subscription.assessmentIds, subscription.access.id);
-    }
 
     loader.dismiss();
   }

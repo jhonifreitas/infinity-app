@@ -2,6 +2,8 @@ import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { ToastController, LoadingController, AlertController, NavController } from '@ionic/angular';
 
+import firebase from 'firebase';
+
 import { File } from '@ionic-native/file/ngx';
 
 @Injectable({
@@ -17,6 +19,26 @@ export class UtilService {
     private alertCtrl: AlertController,
     private loadingCtrl: LoadingController,
   ) {}
+
+  static transformTimestampToDate(obj: any): any {
+    if (null === obj || 'object' !== typeof obj) return obj;
+
+    if (obj instanceof firebase.firestore.Timestamp) return obj.toDate();
+
+    if (obj instanceof Array) {
+      const copy = [];
+      for (let i = 0, len = obj.length; i < len; i++) copy[i] = this.transformTimestampToDate(obj[i]);
+      return copy;
+    }
+
+    if (obj instanceof Object) {
+      const copy: any = {};
+      for (const attr in obj) if (obj.hasOwnProperty(attr)) copy[attr] = this.transformTimestampToDate(obj[attr]);
+      return copy;
+    }
+
+    throw new Error('The object could not be transformed! Type is not supported.');
+  }
 
   message(message: string, duration = 4000, position: 'top' | 'bottom' | 'middle' = 'bottom') {
     this.toast.create({

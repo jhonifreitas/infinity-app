@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Subscription as DefaultSubscription } from 'rxjs';
 
 import { Student } from '../models/student';
+import { UtilService } from './util.service';
 import { Subscription } from '../models/subscription';
-import { FirebaseAbstract } from './firebase/abstract';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +30,7 @@ export class StorageService {
     localStorage.setItem('subscriptions', JSON.stringify(data));
   }
   get getSubscriptions(): Subscription[] {
-    return FirebaseAbstract.transformTimestampToDate(JSON.parse(localStorage.getItem('subscriptions')));
+    return UtilService.transformTimestampToDate(JSON.parse(localStorage.getItem('subscriptions')));
   }
   removeSubscriptions() {
     localStorage.removeItem('subscriptions');

@@ -31,7 +31,7 @@ export class ProfileGuard implements CanActivate {
       const id = route.paramMap.get('id');
       const accessId = route.paramMap.get('accessId');
       const subscriptions = this._storage.getSubscriptions;
-      
+
       if (route.data.assessment) {
         if (subscriptions.find(sub => sub.assessmentIds.includes(id) && sub.access.id === accessId)) {
           const application = await this._application.getByAssessmentIdByAccessId(id, accessId).catch(_ => {});
