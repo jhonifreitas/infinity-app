@@ -29,7 +29,7 @@ import { RandomPipe } from 'src/app/pipes/random.pipe';
       innerStrokeColor: 'rgba(var(--ion-color-primary-rgb), .2)',
       outerStrokeGradientStopColor: 'var(--ion-color-primary-tint)'
     }),
-    RouterModule.forChild([{ path: '', component: AssessmentFormPage }])
+    RouterModule.forChild([{ path: ':accessId', component: AssessmentFormPage }])
   ],
   declarations: [AssessmentFormPage],
   providers: [RandomPipe]

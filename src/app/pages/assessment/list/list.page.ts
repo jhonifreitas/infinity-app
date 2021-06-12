@@ -4,9 +4,9 @@ import { PopoverController } from '@ionic/angular';
 import { Assessment } from 'src/app/models/assessment';
 
 import { UtilService } from 'src/app/services/util.service';
+import { StorageService } from 'src/app/services/storage.service';
 import { SubscriptionPage } from '../../subscription/subscription.page';
 import { ApplicationService } from 'src/app/services/firebase/application.service';
-import { SubscriptionService } from 'src/app/services/firebase/subscription.service';
 import { AssessmentService } from 'src/app/services/firebase/assessment/assessment.service';
 
 @Component({
@@ -20,40 +20,41 @@ export class AssessmentListPage implements OnInit {
 
   constructor(
     private _util: UtilService,
+    private _storage: StorageService,
     private popoverCtrl: PopoverController,
     private _assessment: AssessmentService,
-    private _applications: ApplicationService,
-    private _subscription: SubscriptionService
+    private _applications: ApplicationService
   ) {}
 
   async ngOnInit() {
-    const loader = await this._util.loading('Verificando acesso...');
-    await this._subscription.getByStudentId().then(subscription => {
-      loader.dismiss();
-      this.getAssessments(subscription.assessmentIds);
-    }).catch(_ => {
-      loader.dismiss();
-      this.openSubscription();
-    });
+    this.items = [];
+    const subscriptions = this._storage.getSubscriptions.filter(sub => sub.assessmentIds.length);
+
+    if (!subscriptions.length) this.openSubscription();
+
+    const loader = await this._util.loading('Liberando acesso...');
+    for (const subscription of subscriptions) {
+      await this.getAssessments(subscription.assessmentIds, subscription.access.id);
+    }
+
+    loader.dismiss();
   }
 
-  async getAssessments(assessmentIds: string[]) {
-    const loader = await this._util.loading('Liberando acesso...');
-    this.items = [];
+  async getAssessments(assessmentIds: string[], accessId: string) {
     for (const assessmentId of assessmentIds) {
-      const application = await this._applications.getByAssessmentId(assessmentId).catch(_ => {});
+      const application = await this._applications.getByAssessmentIdByAccessId(assessmentId, accessId).catch(_ => {});
       if (!application || !application.end) {
         const assessment = await this._assessment.getById(assessmentId);
-        this.items.push(assessment);
+        assessment._accessId = accessId;
+        if (!this.items.find(item => item.id === assessment.id)) this.items.push(assessment);
       }
     }
-    loader.dismiss();
   }
 
   async openSubscription() {
     const popover = await this.popoverCtrl.create({component: SubscriptionPage});
     await popover.present();
     const { data } = await popover.onDidDismiss();
-    if (data) this.getAssessments(data.assessmentIds);
+    if (data) this.getAssessments(data.assessmentIds, data.accessId);
   }
 }

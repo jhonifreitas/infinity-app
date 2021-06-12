@@ -9,6 +9,7 @@ export class Assessment extends Base {
   type: 'neuro' | 'profile' | 'objective';
 
   _groups?: Group[];
+  _accessId?: string;
   _questions?: Question[];
   _instructions?: Instruction[];
 

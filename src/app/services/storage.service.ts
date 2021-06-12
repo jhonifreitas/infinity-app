@@ -1,14 +1,16 @@
-import { Subscription } from 'rxjs';
 import { Injectable } from '@angular/core';
+import { Subscription as DefaultSubscription } from 'rxjs';
 
 import { Student } from '../models/student';
+import { Subscription } from '../models/subscription';
+import { FirebaseAbstract } from './firebase/abstract';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StorageService {
 
-  private subscriptions: {tag: string; sub: Subscription}[] = [];
+  private subscriptions: {tag: string; sub: DefaultSubscription}[] = [];
 
   constructor() {}
 
@@ -24,7 +26,18 @@ export class StorageService {
   }
 
   // SUBSCRIPTION
-  set addSubscription(data: {tag: string; sub: Subscription}) {
+  set setSubscriptions(data: Subscription[]) {
+    localStorage.setItem('subscriptions', JSON.stringify(data));
+  }
+  get getSubscriptions(): Subscription[] {
+    return FirebaseAbstract.transformTimestampToDate(JSON.parse(localStorage.getItem('subscriptions')));
+  }
+  removeSubscriptions() {
+    localStorage.removeItem('subscriptions');
+  }
+
+  // OBSERVABLE
+  set addObservable(data: {tag: string; sub: DefaultSubscription}) {
     const index = this.subscriptions.findIndex(sub => sub.tag === data.tag);
     if (index >= 0) {
       this.subscriptions[index].sub.unsubscribe();
@@ -33,7 +46,7 @@ export class StorageService {
     this.subscriptions.push(data);
   }
 
-  clearSubscriptions() {
+  clearObservables() {
     for (const subscribe of this.subscriptions) subscribe.sub.unsubscribe();
     this.subscriptions = [];
   }

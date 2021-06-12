@@ -33,9 +33,10 @@ export class ApplicationService extends FirebaseAbstract<Application> {
     return super.save(data);
   }
 
-  async getByAssessmentId(id: string) {
+  async getByAssessmentIdByAccessId(id: string, accessId: string) {
     const where = [
       new FirebaseWhere('assessment.id', '==', id),
+      new FirebaseWhere('assessment.accessId', '==', accessId),
       new FirebaseWhere('student.id', '==', this._storage.getUser.id)
     ];
     return this.getWhereMany(where, null, null, 1).then(docs => docs.length ? docs[0] : Promise.reject());

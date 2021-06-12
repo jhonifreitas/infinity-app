@@ -57,13 +57,13 @@ export class SubscriptionPage implements OnInit {
       this.data.student.name = student.name;
 
       await this._access.getByCode(accessCode).then(async access => {
-        const subscription = await this._subscription.getByStudentId().catch(_ => {});
+        const subscription = await this._subscription.getByStudentIdByAccessId(access.id).catch(_ => {});
         if (!subscription) {
           this.data.access.id = access.id;
           this.data.access.code = access.code;
           this.data.assessmentIds = access.assessmentIds;
           await this._subscription.add(this.data);
-          await this._access.update(access.id, {used: access.used++});
+          await this._access.update(access.id, {used: access.used+1});
           this.goToBack(access);
         } else this._util.message('Código já utilizado!');
       }).catch(err => this._util.message(err));

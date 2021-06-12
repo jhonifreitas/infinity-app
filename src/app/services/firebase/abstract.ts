@@ -239,10 +239,10 @@ export abstract class FirebaseAbstract<T extends Base> {
 
   protected toObject(doc: firebase.firestore.DocumentData): T {
     const data = { id: doc.id, ...doc.data() };
-    return this.transformTimestampToDate(data);
+    return FirebaseAbstract.transformTimestampToDate(data);
   }
 
-  private transformTimestampToDate(obj: any): any {
+  static transformTimestampToDate(obj: any): any {
     if (null === obj || 'object' !== typeof obj) return obj;
 
     if (obj instanceof firebase.firestore.Timestamp) return obj.toDate();

@@ -7,7 +7,6 @@ import { UtilService } from '../services/util.service';
 import { StorageService } from '../services/storage.service';
 import { StudentService } from '../services/firebase/student.service';
 import { ApplicationService } from '../services/firebase/application.service';
-import { SubscriptionService } from '../services/firebase/subscription.service';
 import { AssessmentService } from '../services/firebase/assessment/assessment.service';
 
 @Injectable({
@@ -21,8 +20,7 @@ export class ProfileGuard implements CanActivate {
     private _student: StudentService,
     private _storage: StorageService,
     private _assessment: AssessmentService,
-    private _application: ApplicationService,
-    private _subscription: SubscriptionService
+    private _application: ApplicationService
   ){ }
 
   canActivate(
@@ -31,11 +29,12 @@ export class ProfileGuard implements CanActivate {
     return new Promise(async resolve => {
       const loader = await this._util.loading('Verificando acesso ao conteúdo...');
       const id = route.paramMap.get('id');
-      const subscription = await this._subscription.getByStudentId();
-
+      const accessId = route.paramMap.get('accessId');
+      const subscriptions = this._storage.getSubscriptions;
+      
       if (route.data.assessment) {
-        if (subscription.assessmentIds.includes(id)) {
-          const application = await this._application.getByAssessmentId(id).catch(_ => {});
+        if (subscriptions.find(sub => sub.assessmentIds.includes(id) && sub.access.id === accessId)) {
+          const application = await this._application.getByAssessmentIdByAccessId(id, accessId).catch(_ => {});
           if (!application || !application.end) {
             const requireds = await this.checkProfile(id);
             loader.dismiss();

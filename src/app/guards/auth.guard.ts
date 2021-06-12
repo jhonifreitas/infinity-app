@@ -5,6 +5,7 @@ import { CanActivate, Router } from '@angular/router';
 
 import { StorageService } from 'src/app/services/storage.service';
 import { StudentService } from 'src/app/services/firebase/student.service';
+import { SubscriptionService } from '../services/firebase/subscription.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,7 @@ export class AuthGuard implements CanActivate {
     private auth: AngularFireAuth,
     private _student: StudentService,
     private _storage: StorageService,
+    private _subscription: SubscriptionService
   ){ }
 
   canActivate(): Observable<boolean> | Promise<boolean> | boolean {
@@ -23,8 +25,9 @@ export class AuthGuard implements CanActivate {
       this.auth.onAuthStateChanged(async fbUser => {
         if (fbUser) {
           const user = await this._student.getById(fbUser.uid);
-          if (user) {
+          if (user && !user.deletedAt) {
             this._storage.setUser = user;
+            this._storage.setSubscriptions = await this._subscription.getByStudentId();
             resolve(true);
           } else this.auth.signOut();
         } else {

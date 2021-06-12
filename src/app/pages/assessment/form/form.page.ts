@@ -11,6 +11,7 @@ import { Application, Answer } from 'src/app/models/application';
 import { RandomPipe } from 'src/app/pipes/random.pipe';
 
 import { UtilService } from 'src/app/services/util.service';
+import { AccessService } from 'src/app/services/firebase/access.service';
 import { ApplicationService } from 'src/app/services/firebase/application.service';
 import { AssessmentService } from 'src/app/services/firebase/assessment/assessment.service';
 import { AssessmentGroupService } from 'src/app/services/firebase/assessment/group.service';
@@ -56,6 +57,7 @@ export class AssessmentFormPage implements OnInit {
     private _util: UtilService,
     private randomPipe: RandomPipe,
     private navCtrl: NavController,
+    private _access: AccessService,
     private formBuilder: FormBuilder,
     private _group: AssessmentGroupService,
     private _assessment: AssessmentService,
@@ -80,9 +82,12 @@ export class AssessmentFormPage implements OnInit {
 
   async getAssessment() {
     const id = this.activatedRoute.snapshot.paramMap.get('id');
+    const accessId = this.activatedRoute.snapshot.paramMap.get('accessId');
+
     await this._assessment.getById(id).then(async assessment => {
       this.assessment = assessment;
       this.data.assessment = {
+        accessId,
         id: assessment.id,
         name: assessment.name
       };
@@ -139,7 +144,8 @@ export class AssessmentFormPage implements OnInit {
 
   async checkStarted() {
     const id = this.activatedRoute.snapshot.paramMap.get('id');
-    const app = await this._application.getByAssessmentId(id).catch(_ => {});
+    const accessId = this.activatedRoute.snapshot.paramMap.get('accessId');
+    const app = await this._application.getByAssessmentIdByAccessId(id, accessId).catch(_ => {});
 
     if (app && !app.end) {
       const end = new Date(app.init);
