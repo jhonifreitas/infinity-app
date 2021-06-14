@@ -15,7 +15,7 @@ const routes: Routes = [
 
   { path: '', canActivate: [AuthGuard], children: [
     {
-      path: 'assessment/:id',
+      path: 'assessment/:id/:accessId',
       data: {assessment: true},
       canActivate: [ProfileGuard],
       loadChildren: () => import('./pages/assessment/form/form.module').then(m => m.AssessmentFormPageModule)

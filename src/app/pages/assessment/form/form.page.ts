@@ -5,13 +5,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { intervalToDuration, Duration } from 'date-fns';
 
-import { Assessment, Question } from 'src/app/models/assessment';
 import { Application, Answer } from 'src/app/models/application';
+import { Assessment, Question } from 'src/app/models/assessment';
 
 import { RandomPipe } from 'src/app/pipes/random.pipe';
 
 import { UtilService } from 'src/app/services/util.service';
-import { AccessService } from 'src/app/services/firebase/access.service';
 import { ApplicationService } from 'src/app/services/firebase/application.service';
 import { AssessmentService } from 'src/app/services/firebase/assessment/assessment.service';
 import { AssessmentGroupService } from 'src/app/services/firebase/assessment/group.service';
@@ -57,7 +56,6 @@ export class AssessmentFormPage implements OnInit {
     private _util: UtilService,
     private randomPipe: RandomPipe,
     private navCtrl: NavController,
-    private _access: AccessService,
     private formBuilder: FormBuilder,
     private _group: AssessmentGroupService,
     private _assessment: AssessmentService,

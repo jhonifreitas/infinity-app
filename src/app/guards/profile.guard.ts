@@ -51,7 +51,6 @@ export class ProfileGuard implements CanActivate {
 
       loader.dismiss();
       this._util.message('Você não tem acesso a este conteúdo!');
-      this.navCtrl.back();
       return resolve(false);
     });
   }
