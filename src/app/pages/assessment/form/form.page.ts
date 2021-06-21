@@ -3,7 +3,7 @@ import { IonSlides, NavController } from '@ionic/angular';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { intervalToDuration, Duration } from 'date-fns';
+import { intervalToDuration, addMinutes, Duration } from 'date-fns';
 
 import { Application, Answer } from 'src/app/models/application';
 import { Assessment, Question } from 'src/app/models/assessment';
@@ -146,8 +146,7 @@ export class AssessmentFormPage implements OnInit {
     const app = await this._application.getByAssessmentIdByAccessId(id, accessId).catch(_ => {});
 
     if (app && !app.end) {
-      const end = new Date(app.init);
-      end.setHours(end.getHours() + this.assessment.duration);
+      const end = addMinutes(new Date(app.init), this.assessment.duration);
       const inProgress = new Date() < end;
 
       let message = 'Infelizmente o tempo máximo para realizar esse Assessment expirou.<br><br>Deseja fazer novamente?';
@@ -227,7 +226,7 @@ export class AssessmentFormPage implements OnInit {
   async createApplication() {
     await this._util.alertConfirm(
       'Atenção!',
-      `Você tem ${this.assessment.duration} horas, a partir de agora para concluir.<h4>Boa sorte!</h4>`,
+      `Você tem ${this.assessment.duration} minutos, a partir de agora para concluir.<h4>Boa sorte!</h4>`,
       'Iniciar', 'cancelar'
     ).then(async _ => {
       const loader = await this._util.loading('Iniciando...');
