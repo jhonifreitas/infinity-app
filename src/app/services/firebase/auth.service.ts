@@ -68,6 +68,7 @@ export class AuthService {
   }
 
   signOut() {
+    localStorage.clear();
     this._storage.clearObservables();
     return this.auth.signOut();
   }

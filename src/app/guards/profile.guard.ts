@@ -59,7 +59,7 @@ export class ProfileGuard implements CanActivate {
     const assessment = await this._assessment.getById(assessmentId);
     if (assessment.studentRequireds.length) {
       const student = await this._student.getById(this._storage.getUser.id);
-      return assessment.studentRequireds.filter(required => (
+      const requireds = assessment.studentRequireds.filter(required => (
           (required === 'name' && !student.name) ||
           (required === 'email' && !student.email) ||
           (required === 'image' && !student.image) ||
@@ -90,6 +90,7 @@ export class ProfileGuard implements CanActivate {
             !student.social || (!student.social.facebook && !student.social.instagram && !student.social.linkedin)))
         )
       );
+      if (requireds.length) return assessment.studentRequireds;
     }
 
     return [];

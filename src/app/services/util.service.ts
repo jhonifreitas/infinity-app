@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { ToastController, LoadingController, AlertController, NavController } from '@ionic/angular';
 
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 
 import { File } from '@ionic-native/file/ngx';
 

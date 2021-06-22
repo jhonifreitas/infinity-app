@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
 
 import { Assessment } from 'src/app/models/assessment';
@@ -14,7 +14,7 @@ import { AssessmentService } from 'src/app/services/firebase/assessment/assessme
   templateUrl: 'list.page.html',
   styleUrls: ['list.page.scss']
 })
-export class AssessmentListPage implements OnInit {
+export class AssessmentListPage {
 
   items: Assessment[];
 
@@ -26,7 +26,7 @@ export class AssessmentListPage implements OnInit {
     private _applications: ApplicationService
   ) {}
 
-  async ngOnInit() {
+  async ionViewDidEnter() {
     this.items = [];
     const subscriptions = this._storage.getSubscriptions.filter(sub => sub.assessmentIds.length);
 
@@ -45,7 +45,7 @@ export class AssessmentListPage implements OnInit {
       if (!application || !application.end) {
         const assessment = await this._assessment.getById(assessmentId);
         assessment._accessId = accessId;
-        if (!this.items.find(item => item.id === assessment.id)) this.items.push(assessment);
+        if (!assessment.deletedAt && !this.items.find(item => item.id === assessment.id)) this.items.push(assessment);
       }
     }
   }

@@ -102,28 +102,28 @@ export class ProfilePage implements OnInit {
       spouseName: [''],
 
       address: this.formBuilder.group({
-        street: ['', Validators.required],
-        number: ['', Validators.required],
-        district: ['', Validators.required],
-        city: [{value: '', disabled: true}, Validators.required],
-        state: ['', Validators.required],
-        zipcode: ['', Validators.required],
+        street: [''],
+        number: [''],
+        district: [''],
+        city: [{value: '', disabled: true}],
+        state: [''],
+        zipcode: [''],
         complement: [''],
       }),
 
       company: this.formBuilder.group({
-        companyId: ['', Validators.required],
-        branchId: [{value: '', disabled: true}, Validators.required],
-        departmentId: [{value: '', disabled: true}, Validators.required],
-        areaId: [{value: '', disabled: true}, Validators.required],
-        postId: [{value: '', disabled: true}, Validators.required],
+        companyId: [''],
+        branchId: [{value: '', disabled: true}],
+        departmentId: [{value: '', disabled: true}],
+        areaId: [{value: '', disabled: true}],
+        postId: [{value: '', disabled: true}],
       }),
 
       course: this.formBuilder.group({
-        name: ['', Validators.required],
-        institute: ['', Validators.required],
-        city: [{value: '', disabled: true}, Validators.required],
-        state: ['', Validators.required],
+        name: [''],
+        institute: [''],
+        city: [{value: '', disabled: true}],
+        state: [''],
         conclusion: [''],
       }),
 
@@ -229,6 +229,7 @@ export class ProfilePage implements OnInit {
       }
     }
     this.formGroup.markAllAsTouched();
+    for (const key in this.controls) this.formGroup.get(key).updateValueAndValidity();
     this.formGroup.updateValueAndValidity();
   }
 

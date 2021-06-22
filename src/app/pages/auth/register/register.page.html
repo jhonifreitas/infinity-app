@@ -38,7 +38,7 @@
           <ion-item>
             <ion-label position="floating">Senha</ion-label>
             <ion-input [type]="togglePass ? 'text' : 'password'" formControlName="password"></ion-input>
-            <ion-icon slot="end" class="ion-align-self-end" [name]="togglePass ? 'eye-off' : 'eye'" (click)="togglePass = !togglePass"></ion-icon>
+            <ion-icon slot="end" class="ion-align-self-end" [name]="togglePass ? 'eye' : 'eye-off'" (click)="togglePass = !togglePass"></ion-icon>
           </ion-item>
           <ion-item *ngIf="controls.password.value && controls.password.hasError('pattern')">
             <ion-icon slot="start" name="close" color="danger" size="small" class="ion-margin-end"></ion-icon>
@@ -51,7 +51,7 @@
           <ion-item>
             <ion-label position="floating">Confirmar senha</ion-label>
             <ion-input [type]="togglePass ? 'text' : 'password'" formControlName="confPassword"></ion-input>
-            <ion-icon slot="end" class="ion-align-self-end" [name]="togglePass ? 'eye-off' : 'eye'" (click)="togglePass = !togglePass"></ion-icon>
+            <ion-icon slot="end" class="ion-align-self-end" [name]="togglePass ? 'eye' : 'eye-off'" (click)="togglePass = !togglePass"></ion-icon>
           </ion-item>
           <ion-item *ngIf="controls.confPassword.value && controls.confPassword.hasError('passNotSame')">
             <ion-icon slot="start" name="close" color="danger" size="small" class="ion-margin-end"></ion-icon>
