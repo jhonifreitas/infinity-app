@@ -229,7 +229,8 @@ export class ProfilePage implements OnInit {
       }
     }
     this.formGroup.markAllAsTouched();
-    for (const key in this.controls) this.formGroup.get(key).updateValueAndValidity();
+    for (const key in this.controls)
+      if ({}.hasOwnProperty.call(this.controls, key)) this.formGroup.get(key).updateValueAndValidity();
     this.formGroup.updateValueAndValidity();
   }
 
