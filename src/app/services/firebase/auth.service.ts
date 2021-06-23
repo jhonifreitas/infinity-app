@@ -67,6 +67,14 @@ export class AuthService {
     return this.auth.sendPasswordResetEmail(email);
   }
 
+  verifyPasswordResetCode(code: string) {
+    return this.auth.verifyPasswordResetCode(code);
+  }
+
+  confirmPasswordReset(code: string, password: string) {
+    return this.auth.confirmPasswordReset(code, password);
+  }
+
   signOut() {
     localStorage.clear();
     this._storage.clearObservables();

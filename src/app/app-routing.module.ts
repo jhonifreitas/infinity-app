@@ -11,7 +11,8 @@ const routes: Routes = [
   { path: 'auth', children: [
     { path: 'entrar', loadChildren: () => import('./pages/auth/login/login.module').then(m => m.LoginPageModule) },
     { path: 'esqueci-senha', loadChildren: () => import('./pages/auth/forgot/forgot.module').then(m => m.ForgotPageModule) },
-    { path: 'registre-se', loadChildren: () => import('./pages/auth/register/register.module').then(m => m.RegisterPageModule) }
+    { path: 'registre-se', loadChildren: () => import('./pages/auth/register/register.module').then(m => m.RegisterPageModule) },
+    { path: 'redefinir-senha', loadChildren: () => import('./pages/auth/password-reset/password-reset.module').then(m => m.PasswordResetPageModule) }
   ]},
 
   { path: '', canActivate: [AuthGuard], children: [

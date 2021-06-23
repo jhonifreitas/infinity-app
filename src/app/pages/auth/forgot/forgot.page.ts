@@ -18,8 +18,8 @@ export class ForgotPage {
   constructor(
     private _auth: AuthService,
     private _util: UtilService,
-    public _storage: StorageService,
     private navCtrl: NavController,
+    public _storage: StorageService,
     private formBuilder: FormBuilder,
   ) {
     this.formGroup = this.formBuilder.group({

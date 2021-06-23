@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { ForgotPage } from './forgot.page';
+import { PasswordResetPage } from './password-reset.page';
 
 @NgModule({
   imports: [
@@ -12,8 +12,8 @@ import { ForgotPage } from './forgot.page';
     IonicModule,
     CommonModule,
     ReactiveFormsModule,
-    RouterModule.forChild([{ path: '', component: ForgotPage }])
+    RouterModule.forChild([{ path: '', component: PasswordResetPage }])
   ],
-  declarations: [ForgotPage]
+  declarations: [PasswordResetPage]
 })
-export class ForgotPageModule {}
+export class PasswordResetPageModule {}
