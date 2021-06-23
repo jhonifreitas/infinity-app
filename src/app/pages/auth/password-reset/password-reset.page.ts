@@ -70,7 +70,7 @@ export class PasswordResetPage implements OnInit {
       const data = this.formGroup.value;
       await this._auth.confirmPasswordReset(this.code, data.password).then(_ => {
         this._util.message('Senha redefinida com sucesso! Faça login, utilizando sua nova senha!');
-        this.navCtrl.navigateRoot('/auth/login');
+        this.navCtrl.navigateRoot('/auth/entrar');
       }).catch(_ => this._util.message('Erro ao redefinir senha!'));
       loader.dismiss();
     } else this._util.message('Verifique os dados antes de prosseguir!');
