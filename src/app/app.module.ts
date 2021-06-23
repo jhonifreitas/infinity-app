@@ -1,7 +1,9 @@
 import localePt from '@angular/common/locales/pt';
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { RouteReuseStrategy } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
+import { ServiceWorkerModule } from '@angular/service-worker';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { CurrencyPipe, DatePipe, registerLocaleData } from '@angular/common';
 
@@ -27,7 +29,6 @@ import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { environment } from 'src/environments/environment';
-import { ServiceWorkerModule } from '@angular/service-worker';
 import { SubscriptionPageModule } from './pages/subscription/subscription.module';
 
 registerLocaleData(localePt);
@@ -36,6 +37,7 @@ registerLocaleData(localePt);
   declarations: [AppComponent],
   imports: [
     BrowserModule,
+    HttpClientModule,
     AppRoutingModule,
     IonicModule.forRoot(),
     AngularFireAuthModule,

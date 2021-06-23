@@ -15,25 +15,12 @@ export class AuthService {
 
   constructor(
     private auth: AngularFireAuth,
-    private _storage: StorageService,
     private _student: StudentService,
+    private _storage: StorageService,
   ) { }
 
   async register(data: Student, password: string): Promise<string> {
-    return new Promise(async (resolve, reject) => {
-      const param: any = {
-        ...data,
-        password,
-        authType: 'email'
-      };
-      this.auth.createUserWithEmailAndPassword(data.email, password).then(credential => {
-        const uid = credential.user.uid;
-        this._student.set(uid, param).then(_ => {
-          this._storage.setUser = data;
-          resolve(uid);
-        });
-      }).catch(err => reject(AuthErrorCodeMessages.auth[err.code] || err));
-    });
+    return this._student.add({...data, password} as any).then(_ => this.signInEmail(data.email, password));
   }
 
   async signInEmail(email: string, password: string): Promise<string> {

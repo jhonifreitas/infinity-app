@@ -32,7 +32,7 @@ export class ForgotPage {
       const loader = await this._util.loading('Buscando...');
       const data = this.formGroup.value;
       await this._auth.resetPassword(data.email).then(res => {
-        this._util.message('Senha enviada ao e-mail cadastrado.')  
+        this._util.message('Senha enviada ao e-mail cadastrado.');
         this.navCtrl.navigateRoot('/auth/login');
       }).catch(_ => this._util.message('E-mail inválido ou não cadastrado!'));
       loader.dismiss();

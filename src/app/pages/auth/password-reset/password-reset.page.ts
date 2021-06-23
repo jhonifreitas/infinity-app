@@ -41,7 +41,7 @@ export class PasswordResetPage implements OnInit {
     this.code = this.activatedRoute.snapshot.queryParamMap.get('oobCode');
     await this._auth.verifyPasswordResetCode(this.code).catch(_ => {
       this._util.message('Código de redefinição inválido! Faça o processo de redefinição novamente!');
-      // this.navCtrl.navigateRoot('/auth/esqueci-senha');
+      this.navCtrl.navigateRoot('/auth/esqueci-senha');
     });
   }
 
