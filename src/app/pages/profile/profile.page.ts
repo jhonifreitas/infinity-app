@@ -373,7 +373,7 @@ export class ProfilePage implements OnInit {
       this._util.message('Preencha ao menos uma das redes sociais!');
     } else if (this.imageRequired && !this.data.image) this._util.message('Foto de perfil é obrigatório!');
     else if (this.formGroup.valid) {
-      const loader = await this._util.loading('Criando...');
+      const loader = await this._util.loading('Salvando...');
       Object.assign(this.data, values);
 
       if (values.dateBirth) this.data.dateBirth = new Date(values.dateBirth);
