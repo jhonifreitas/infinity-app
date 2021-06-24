@@ -150,14 +150,14 @@
             <ion-col size="6">
               <div class="animal" [class.active]="resultProfile.type === 'peacock'">
                 <img src="assets/animals/peacock.png" alt="">
-                <span class="percent">{{ resultProfile.peacock }}%</span>
+                <span class="percent">{{ resultProfile.peacock | number: '1.0-2' }}%</span>
                 <span class="name">Pavão</span>
               </div>
             </ion-col>
             <ion-col size="6">
               <div class="animal" [class.active]="resultProfile.type === 'lion'">
                 <img src="assets/animals/lion.png" alt="">
-                <span class="percent">{{ resultProfile.lion }}%</span>
+                <span class="percent">{{ resultProfile.lion | number: '1.0-2' }}%</span>
                 <span class="name">Leão</span>
               </div>
             </ion-col>
@@ -166,14 +166,14 @@
             <ion-col size="6">
               <div class="animal" [class.active]="resultProfile.type === 'dog'">
                 <img src="assets/animals/dog.png" alt="">
-                <span class="percent">{{ resultProfile.dog }}%</span>
+                <span class="percent">{{ resultProfile.dog | number: '1.0-2' }}%</span>
                 <span class="name">Cachorro</span>
               </div>
             </ion-col>
             <ion-col size="6">
               <div class="animal" [class.active]="resultProfile.type === 'monkey'">
                 <img src="assets/animals/monkey.png" alt="">
-                <span class="percent">{{ resultProfile.monkey }}%</span>
+                <span class="percent">{{ resultProfile.monkey | number: '1.0-2' }}%</span>
                 <span class="name">Macaco</span>
               </div>
             </ion-col>
