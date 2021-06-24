@@ -20,7 +20,7 @@ export class CompanyPostService extends FirebaseAbstract<Post> {
   getByAreaId(areaId: string) {
     const where = [
       new FirebaseWhere('areaId', '==', areaId),
-      new FirebaseWhere('deletedAt', '!=', null),
+      new FirebaseWhere('deletedAt', '==', null)
     ];
     return this.getWhereMany(where);
   }

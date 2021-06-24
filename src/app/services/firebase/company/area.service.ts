@@ -19,7 +19,7 @@ export class CompanyAreaService extends FirebaseAbstract<Area> {
 
   getByDepartmentId(departmentId: string) {
     const where = [
-      new FirebaseWhere('deletedAt', '!=', null),
+      new FirebaseWhere('deletedAt', '==', null),
       new FirebaseWhere('departmentId', '==', departmentId),
     ];
     return this.getWhereMany(where);

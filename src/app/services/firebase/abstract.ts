@@ -187,6 +187,7 @@ export abstract class FirebaseAbstract<T extends Base> {
     filters: FirebaseWhere[],
     orderBy?: string, orderDirection?: firebase.firestore.OrderByDirection, limit?: number
   ): Promise<T[]> {
+    filters = Object.assign([], filters);
     let query = this.collection().where(filters[0].field, filters[0].operator, filters[0].value);
 
     filters.splice(0, 1);
@@ -206,6 +207,7 @@ export abstract class FirebaseAbstract<T extends Base> {
   ): Observable<DocumentObservable<T>[]> {
     return this.db
       .collection<T>(this.collectionPath, ref => {
+        filters = Object.assign([], filters);
         let query = ref.where(filters[0].field, filters[0].operator, filters[0].value);
 
         filters.splice(0, 1);
