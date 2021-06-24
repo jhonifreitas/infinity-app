@@ -18,7 +18,11 @@ export class AccessService extends FirebaseAbstract<Access> {
   }
 
   async getByCode(code: string) {
-    return this.getWhere('code', '==', code, null, null, 1).then(res => {
+    const where = [
+      new FirebaseWhere('code', '==', code),
+      new FirebaseWhere('deletedAt', '!=', null),
+    ];
+    return this.getWhereMany(where, null, null, 1).then(res => {
       if (res.length) {
         const doc = res[0];
         if (doc.validity < new Date()) return Promise.reject('Código expirado!');
