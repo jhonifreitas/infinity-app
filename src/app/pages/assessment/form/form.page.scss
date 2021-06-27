@@ -84,3 +84,7 @@ ion-content {
 ion-footer {
   padding: 1rem;
 }
+
+@media (min-width: 992px) {
+  #resultProfile {max-width: 500px;}
+}
