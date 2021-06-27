@@ -16,7 +16,7 @@
     <ion-slide *ngFor="let instruction of assessment?._instructions">
 
       <div class="ql-container">
-        <div class="ql-editor" [innerHTML]="instruction.text"></div>
+        <div class="ql-editor" [innerHTML]="instruction.text | safe:'html'"></div>
       </div>
 
     </ion-slide>
@@ -26,7 +26,7 @@
         <ion-note slot="start">{{ i + 1 }}</ion-note>
         <ion-label class="ion-text-wrap">
           <div class="ql-container">
-            <div class="ql-editor" [innerHTML]="question.text"></div>
+            <div class="ql-editor" [innerHTML]="question.text | safe:'html'"></div>
           </div>
         </ion-label>
       </ion-item>

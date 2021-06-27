@@ -7,10 +7,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgCircleProgressModule } from 'ng-circle-progress';
 
 import { AssessmentFormPage } from './form.page';
+import { PipeModule } from 'src/app/pipes/pipe.module';
 import { RandomPipe } from 'src/app/pipes/random.pipe';
 
 @NgModule({
   imports: [
+    PipeModule,
     IonicModule,
     FormsModule,
     CommonModule,
