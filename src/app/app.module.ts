@@ -16,6 +16,9 @@ import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
+// BN IDLE
+import { BnNgIdleService } from 'bn-ng-idle';
+
 // FIREBASE
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -63,6 +66,7 @@ registerLocaleData(localePt);
     StatusBar,
     SplashScreen,
     CurrencyPipe,
+    BnNgIdleService,
     ScreenOrientation,
     AngularFirestoreModule,
     { provide: LOCALE_ID, useValue: 'pt-BR' },

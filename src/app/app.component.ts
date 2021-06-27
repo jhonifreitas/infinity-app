@@ -1,11 +1,14 @@
 import { IonRouterOutlet, Platform } from '@ionic/angular';
 import { Component, QueryList, ViewChildren } from '@angular/core';
 
+import { BnNgIdleService } from 'bn-ng-idle';
+
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 import { UtilService } from './services/util.service';
+import { AuthService } from './services/firebase/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +25,9 @@ export class AppComponent {
   constructor(
     private platform: Platform,
     private _util: UtilService,
+    private _auth: AuthService,
     private statusBar: StatusBar,
+    private bnIdle: BnNgIdleService,
     private splashScreen: SplashScreen,
     private screenOrientation: ScreenOrientation
   ) {
@@ -31,6 +36,7 @@ export class AppComponent {
 
   private initializeApp() {
     this.platform.ready().then(_ => {
+      this.idle();
       if (this.platform.is('cordova')) {
         this.splashScreen.hide();
         this.statusBar.styleLightContent();
@@ -38,6 +44,12 @@ export class AppComponent {
         this.backDevice();
       }
     });
+  }
+
+  private idle() {
+    this.bnIdle.startWatching(900).subscribe((res) => {
+      if (res) this._auth.signOut();
+    })
   }
 
   private backDevice() {
