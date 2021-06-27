@@ -47,9 +47,9 @@ export class AppComponent {
   }
 
   private idle() {
-    this.bnIdle.startWatching(900).subscribe((res) => {
+    this.bnIdle.startWatching(900).subscribe(res => {
       if (res) this._auth.signOut();
-    })
+    });
   }
 
   private backDevice() {
