@@ -69,6 +69,14 @@ ion-alert {
   }
 }
 
+.ql-editor {
+  padding: 0;
+  .ql-video {
+    width: 100%;
+    min-height: 12rem;
+  }
+}
+
 @media (max-width: 991px) {
   #list-empty {min-height: 100%;}
 }

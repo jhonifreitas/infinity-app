@@ -298,7 +298,7 @@ export class AssessmentFormPage implements OnInit {
   goToBack() {
     if (this.data.id && !this.data.end)
       this._util.alertConfirm('Atenção!', 'Deseja mesmo sair?', 'Sim', 'Não')
-        .then(_ => this.navCtrl.back())
+        .then(_ => this.navCtrl.navigateBack('/tabs/assessment'))
         .catch(_ => {});
     else this.navCtrl.back();
   }

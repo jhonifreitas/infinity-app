@@ -27,4 +27,9 @@ ion-content {
       }
     }
   }
+
+  ion-segment-button.required {
+    --indicator-color: rgba(var(--ion-color-danger-rgb), .2);
+    ion-label {color: var(--ion-color-danger);}
+  }
 }

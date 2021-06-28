@@ -4,7 +4,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="ion-padding" *ngIf="!loading">
 
   <ion-avatar [class.required]="imageRequired">
     <ion-img *ngIf="data?.image" [src]="data.image"></ion-img>
@@ -16,19 +16,59 @@
   </ion-avatar>
 
   <ion-segment mode="ios" scrollable [(ngModel)]="segment">
-    <ion-segment-button value="default">
+    <ion-segment-button value="default" [class.required]="
+      controls.name.hasError('required') ||
+      controls.phone.hasError('required') ||
+      controls.email.hasError('required') ||
+      controls.genre.hasError('required') ||
+      controls.dateBirth.hasError('required') ||
+      controls.childrens.hasError('required') ||
+      controls.stateBirth.hasError('required') ||
+      controls.scholarity.hasError('required') ||
+      controls.civilStatus.hasError('required') ||
+      controls.cityBirth.hasError('required') ||
+      controls.cpf.hasError('required') ||
+      controls.rg.hasError('required') ||
+      controls.rgEmitter.hasError('required') ||
+      controls.motherName.hasError('required') ||
+      controls.spouseName.hasError('required')
+    ">
       <ion-label>Geral</ion-label>
     </ion-segment-button>
-    <ion-segment-button value="address">
+    <ion-segment-button value="address" [class.required]="
+      addressControls.street.hasError('required') ||
+      addressControls.number.hasError('required') ||
+      addressControls.district.hasError('required') ||
+      addressControls.city.hasError('required') ||
+      addressControls.state.hasError('required') ||
+      addressControls.zipcode.hasError('required') ||
+      addressControls.complement.hasError('required')
+    ">
       <ion-label>Endereço</ion-label>
     </ion-segment-button>
-    <ion-segment-button value="company">
+    <ion-segment-button value="company" [class.required]="
+      companyControls.companyId.hasError('required') ||
+      companyControls.branchId.hasError('required') ||
+      companyControls.departmentId.hasError('required') ||
+      companyControls.areaId.hasError('required') ||
+      companyControls.postId.hasError('required')
+    ">
       <ion-label>Empresa</ion-label>
     </ion-segment-button>
-    <ion-segment-button value="course">
+    <ion-segment-button value="course" [class.required]="
+      courseControls.name.hasError('required') ||
+      courseControls.institute.hasError('required') ||
+      courseControls.city.hasError('required') ||
+      courseControls.state.hasError('required') ||
+      courseControls.conclusion.hasError('required')
+    ">
       <ion-label>Curso</ion-label>
     </ion-segment-button>
-    <ion-segment-button value="social">
+    <ion-segment-button value="social" [class.required]="
+      socialControls.linkedin.hasError('required') ||
+      socialControls.facebook.hasError('required') ||
+      socialControls.instagram.hasError('required')
+    ">
       <ion-label>Social</ion-label>
     </ion-segment-button>
   </ion-segment>

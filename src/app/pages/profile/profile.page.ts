@@ -1,5 +1,5 @@
 import { ActivatedRoute } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActionSheetController, NavController, Platform } from '@ionic/angular';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -29,9 +29,10 @@ import { CompanyDepartmentService } from 'src/app/services/firebase/company/depa
   templateUrl: 'profile.page.html',
   styleUrls: ['profile.page.scss']
 })
-export class ProfilePage implements OnInit {
+export class ProfilePage {
 
   data: Student;
+  loading = true;
   genres = Genre.all;
   isCordova: boolean;
   formGroup: FormGroup;
@@ -69,6 +70,7 @@ export class ProfilePage implements OnInit {
     private platform: Platform,
     private _util: UtilService,
     private _auth: AuthService,
+    private cd: ChangeDetectorRef,
     private navCtrl: NavController,
     private _student: StudentService,
     private _storage: StorageService,
@@ -135,13 +137,15 @@ export class ProfilePage implements OnInit {
     });
   }
 
-  async ngOnInit() {
+  async ngAfterContentInit() {
     const loader = await this._util.loading();
     await this.getCompanies();
     const requireds = this.activatedRoute.snapshot.paramMap.get('requireds');
     if (requireds) this.setValidators(requireds.split(','));
     await this.setData();
     loader.dismiss();
+    this.loading = false;
+    this.cd.detectChanges();
   }
 
   get controls() {
