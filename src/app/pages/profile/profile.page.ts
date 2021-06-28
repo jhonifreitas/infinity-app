@@ -1,5 +1,5 @@
 import { ActivatedRoute } from '@angular/router';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, AfterContentInit } from '@angular/core';
 import { ActionSheetController, NavController, Platform } from '@ionic/angular';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -29,7 +29,7 @@ import { CompanyDepartmentService } from 'src/app/services/firebase/company/depa
   templateUrl: 'profile.page.html',
   styleUrls: ['profile.page.scss']
 })
-export class ProfilePage {
+export class ProfilePage implements AfterContentInit {
 
   data: Student;
   loading = true;
