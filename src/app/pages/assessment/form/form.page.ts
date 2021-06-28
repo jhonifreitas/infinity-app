@@ -243,7 +243,6 @@ export class AssessmentFormPage implements OnInit {
     let monkey = 0;
     let peacock = 0;
     const total = this.data.answers.length;
-    let type: 'dog' | 'lion' | 'monkey' | 'peacock' = 'monkey';
 
     for (const answer of this.data.answers)
       if (answer.alternative === 'dog') dog += 1;
@@ -251,16 +250,24 @@ export class AssessmentFormPage implements OnInit {
       else if (answer.alternative === 'monkey') monkey += 1;
       else if (answer.alternative === 'peacock') peacock += 1;
 
-    if (dog > lion && dog > monkey && dog > peacock) type = 'dog';
-    else if (lion > monkey && lion > dog && lion > peacock) type = 'lion';
-    else if (peacock > monkey && lion > dog && peacock > lion) type = 'peacock';
+    dog = (dog / total) * 100;
+    lion = (lion / total) * 100;
+    monkey = (monkey / total) * 100;
+    peacock = (peacock / total) * 100;
+
+    const type = [
+      { type: 'dog', value: dog },
+      { type: 'lion', value: lion },
+      { type: 'monkey', value: monkey },
+      { type: 'peacock', value: peacock }
+    ].sort((a, b) => b.value - a.value)[0].type as 'dog' | 'lion' | 'monkey' | 'peacock';
 
     this.resultProfile = {
       type,
-      dog: (dog / total) * 100,
-      lion: (lion / total) * 100,
-      monkey: (monkey / total) * 100,
-      peacock: (peacock / total) * 100
+      dog,
+      lion,
+      monkey,
+      peacock
     };
   }
 
