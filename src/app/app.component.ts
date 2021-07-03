@@ -1,4 +1,5 @@
-import { IonRouterOutlet, Platform } from '@ionic/angular';
+import { SwUpdate } from '@angular/service-worker';
+import { AlertController, IonRouterOutlet, Platform } from '@ionic/angular';
 import { Component, QueryList, ViewChildren } from '@angular/core';
 
 import { BnNgIdleService } from 'bn-ng-idle';
@@ -24,13 +25,26 @@ export class AppComponent {
 
   constructor(
     private platform: Platform,
+    private swUpdate: SwUpdate,
     private _util: UtilService,
     private _auth: AuthService,
     private statusBar: StatusBar,
     private bnIdle: BnNgIdleService,
+    private alertCtrl: AlertController,
     private splashScreen: SplashScreen,
     private screenOrientation: ScreenOrientation
   ) {
+    this.swUpdate.available.subscribe(event => {
+      this.alertCtrl.create({
+        backdropDismiss: false,
+        header: 'Nova Atualização!',
+        message: 'Nova atualização disponível, clique no botão abaixo <b>Atualizar</b>, para carregar as novas atualizações!',
+        buttons: [{
+          text: 'Atualizar',
+          handler: () => window.location.reload()
+        }]
+      }).then(alert => alert.present());
+    });
     this.initializeApp();
   }
 
