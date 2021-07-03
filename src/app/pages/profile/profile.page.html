@@ -85,8 +85,11 @@
       </ion-item>
       <ion-item mode="md">
         <ion-label position="floating">E-mail</ion-label>
-        <ion-input type="email" formControlName="email"></ion-input>
+        <ion-input type="email" formControlName="email" (ionBlur)="validateEmail()"></ion-input>
       </ion-item>
+      <div *ngIf="controls.email.value && controls.email.hasError('exist')" class="ion-margin-bottom" style="padding-left: 10px;">
+        <ion-text color="danger"><small>E-mail já existente!</small></ion-text>
+      </div>
       <ion-item mode="md">
         <ion-label position="floating">Telefone</ion-label>
         <ion-input type="text" formControlName="phone" [brmasker]="{phone: true}" maxlength="15"></ion-input>
@@ -119,10 +122,13 @@
       </ion-item>
       <ion-item mode="md">
         <ion-label position="floating">CPF</ion-label>
-        <ion-input formControlName="cpf" [brmasker]="{mask: '000.000.000-00', type: 'num'}" maxLength="14" inputmode="decimal"></ion-input>
+        <ion-input formControlName="cpf" [brmasker]="{mask: '000.000.000-00', type: 'num'}" maxLength="14" inputmode="decimal" (ionBlur)="validateCPF()"></ion-input>
       </ion-item>
-      <div *ngIf="controls.cpf.value && controls.cpf.hasError('invalid')" class="ion-margin-bottom" style="padding-left: 10px;">
-        <ion-text color="danger"><small>CPF inválido!</small></ion-text>
+      <div *ngIf="controls.cpf.value && (controls.cpf.hasError('invalid') || controls.cpf.hasError('exist'))" class="ion-margin-bottom" style="padding-left: 10px;">
+        <ion-text color="danger">
+          <small *ngIf="controls.cpf.hasError('invalid')">CPF inválido!</small>
+          <small *ngIf="controls.cpf.hasError('exist')">CPF já existente!</small>
+        </ion-text>
       </div>
       <ion-item mode="md">
         <ion-label position="floating">RG</ion-label>

@@ -16,6 +16,7 @@ import { Company, Branch, Department, Area, Post } from 'src/app/models/company'
 import { UtilService } from 'src/app/services/util.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { AuthService } from 'src/app/services/firebase/auth.service';
+import { UserService } from 'src/app/services/firebase/user.service';
 import { ValidatorService } from 'src/app/services/validator.service';
 import { StudentService } from 'src/app/services/firebase/student.service';
 import { CompanyService } from 'src/app/services/firebase/company/company.service';
@@ -69,6 +70,7 @@ export class ProfilePage implements AfterContentInit {
     private webview: WebView,
     private platform: Platform,
     private _util: UtilService,
+    private _user: UserService,
     private _auth: AuthService,
     private cd: ChangeDetectorRef,
     private navCtrl: NavController,
@@ -244,6 +246,26 @@ export class ProfilePage implements AfterContentInit {
     const nameList = value.split(' ');
     if (nameList.length < 2 || !nameList[1]) error = {invalid: true};
     return error;
+  }
+
+  async validateCPF() {
+    const value = this.controls.cpf.value;
+    if (value && !this.controls.cpf.hasError('invalid')) {
+      let students = await this._student.getWhere('cpf', '==', value);
+      students = students.filter(student => student.id !== this.data.id);
+      this.controls.cpf.setErrors(students.length ? {exist: true} : null);
+    }
+  }
+
+  async validateEmail() {
+    const value = this.controls.email.value;
+    if (value && !this.controls.email.hasError('email')) {
+      let users = await this._user.getWhere('email', '==', value);
+      let students = await this._student.getWhere('email', '==', value);
+      users = users.filter(user => user.id !== this.data.id);
+      students = students.filter(student => student.id !== this.data.id);
+      this.controls.email.setErrors(students.length || users.length ? {exist: true} : null);
+    }
   }
 
   birthStateChange(reset = true) {

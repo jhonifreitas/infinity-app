@@ -37,6 +37,7 @@ export class RegisterPage implements OnInit {
   ) {
     this.formGroup = this.formBuilder.group({
       name: ['', [Validators.required, this.validatorName]],
+      cpf: ['', [Validators.required, ValidatorService.validatorCPF]],
       phone: ['', [Validators.required, Validators.minLength(14)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [
@@ -80,12 +81,20 @@ export class RegisterPage implements OnInit {
     return null;
   }
 
+  async validateCPF() {
+    const value = this.controls.cpf.value;
+    if (value && !this.controls.cpf.hasError('invalid')) {
+      const students = await this._student.getWhere('cpf', '==', value);
+      this.controls.cpf.setErrors(students.length ? {exist: true} : null);
+    }
+  }
+
   async validateEmail() {
     const value = this.controls.email.value;
     if (value && !this.controls.email.hasError('email')) {
-      const user = await this._user.getWhere('email', '==', value);
-      const student = await this._student.getWhere('email', '==', value);
-      this.controls.email.setErrors(student.length || user.length ? {exist: true} : null);
+      const users = await this._user.getWhere('email', '==', value);
+      const students = await this._student.getWhere('email', '==', value);
+      this.controls.email.setErrors(students.length || users.length ? {exist: true} : null);
     }
   }
 
@@ -96,6 +105,7 @@ export class RegisterPage implements OnInit {
       const value = this.formGroup.value;
       const data: Student = Object.assign(new Student(), value);
 
+      data.cpf = ValidatorService.cleanCPF(data.cpf);
       data.phone = ValidatorService.cleanPhone(data.phone);
 
       await this._auth.register(data, value.password).then(async uid => {
