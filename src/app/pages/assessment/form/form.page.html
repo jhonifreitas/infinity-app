@@ -150,15 +150,19 @@
             <ion-col size="6">
               <div class="animal" [class.active]="resultProfile.type === 'peacock'">
                 <img src="assets/animals/peacock.png" alt="">
-                <span class="percent">{{ resultProfile.peacock | number: '1.0-2' }}%</span>
-                <span class="name">Pavão</span>
+                <div class="bottom">
+                  <span class="name">Pavão</span>
+                  <span class="percent">{{ resultProfile.peacock | number: '1.0-2' }}%</span>
+                </div>
               </div>
             </ion-col>
             <ion-col size="6">
               <div class="animal" [class.active]="resultProfile.type === 'lion'">
                 <img src="assets/animals/lion.png" alt="">
-                <span class="percent">{{ resultProfile.lion | number: '1.0-2' }}%</span>
-                <span class="name">Leão</span>
+                <div class="bottom">
+                  <span class="name">Leão</span>
+                  <span class="percent">{{ resultProfile.lion | number: '1.0-2' }}%</span>
+                </div>
               </div>
             </ion-col>
           </ion-row>
@@ -166,15 +170,19 @@
             <ion-col size="6">
               <div class="animal" [class.active]="resultProfile.type === 'dog'">
                 <img src="assets/animals/dog.png" alt="">
-                <span class="percent">{{ resultProfile.dog | number: '1.0-2' }}%</span>
-                <span class="name">Cachorro</span>
+                <div class="bottom">
+                  <span class="name">Cachorro</span>
+                  <span class="percent">{{ resultProfile.dog | number: '1.0-2' }}%</span>
+                </div>
               </div>
             </ion-col>
             <ion-col size="6">
               <div class="animal" [class.active]="resultProfile.type === 'monkey'">
                 <img src="assets/animals/monkey.png" alt="">
-                <span class="percent">{{ resultProfile.monkey | number: '1.0-2' }}%</span>
-                <span class="name">Macaco</span>
+                <div class="bottom">
+                  <span class="name">Macaco</span>
+                  <span class="percent">{{ resultProfile.monkey | number: '1.0-2' }}%</span>
+                </div>
               </div>
             </ion-col>
           </ion-row>
