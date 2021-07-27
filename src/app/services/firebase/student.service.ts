@@ -27,14 +27,16 @@ export class StudentService extends FirebaseAbstract<Student> {
   }
 
   async update(id: string, data: Partial<Student>): Promise<void> {
-    return this._api.put(`students/${id}`, data);
+    return this._api.put(`students/${id}`, data).then(_ => null);
   }
 
   uploadImage(id: string, file: Blob | File): Promise<string> {
     return new Promise(resolve => {
       const url = `${StudentService.collectionName}/${id}.png`;
       this.afStorage.ref(url).put(file).then(async (res) => {
-        resolve(await res.ref.getDownloadURL());
+        const imageUrl = await res.ref.getDownloadURL();
+        await this.update(id, {image: imageUrl});
+        resolve(imageUrl);
       });
     });
   }
